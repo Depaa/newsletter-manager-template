@@ -1,0 +1,320 @@
+{
+	"info": {
+		"_postman_id": "50772117-218e-4e18-be52-bb509a648dca",
+		"name": "Newsletter Manager",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "newsletters",
+			"item": [
+				{
+					"name": ":id",
+					"item": [
+						{
+							"name": "get",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{BASE_URL}}/{{ENV}}/newsletters/{{NEWSLETTER_ID}}",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"{{ENV}}",
+										"newsletters",
+										"{{NEWSLETTER_ID}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "update",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"disabledSystemHeaders": {}
+							},
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"userId\": \"user123\",\r\n    \"providerId\": \"PROVIDERRRRRRRRRRRRRRRR\",\r\n    \"startTime\": 1642800000,\r\n    \"endTime\": 1642803600,\r\n    \"notes\": \"Regular checkup\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{BASE_URL}}/{{ENV}}/newsletters/{{NEWSLETTER_ID}}",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"{{ENV}}",
+										"newsletters",
+										"{{NEWSLETTER_ID}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "delete",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.collectionVariables.unset(\"NEWSLETTER_ID\");"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{BASE_URL}}/{{ENV}}/newsletters/{{NEWSLETTER_ID}}",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"{{ENV}}",
+										"newsletters",
+										"{{NEWSLETTER_ID}}"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "subscribe",
+					"item": []
+				},
+				{
+					"name": "unsubscribe",
+					"item": []
+				},
+				{
+					"name": "create",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.collectionVariables.set(\"NEWSLETTER_ID\", JSON.parse(responseBody).id);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {}
+					},
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"userId\": \"user123\",\r\n    \"providerId\": \"doctor456\",\r\n    \"startTime\": 1642800000,\r\n    \"endTime\": 1642803600,\r\n    \"notes\": \"Regular checkup\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/{{ENV}}/newsletters",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"{{ENV}}",
+								"newsletters"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "list",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/{{ENV}}/newsletters",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"{{ENV}}",
+								"newsletters"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "utility",
+			"item": [
+				{
+					"name": "get Cognito token",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"var clientId = pm.environment.get(\"COGNITO_CLIENT_ID\")\r",
+									"var username = pm.environment.get(\"USER_EMAIL\")\r",
+									"var password = pm.environment.get(\"USER_PASSWORD\")\r",
+									"\r",
+									"pm.sendRequest({\r",
+									"    url: \"https://cognito-idp.eu-central-1.amazonaws.com/\",\r",
+									"    method: 'POST',\r",
+									"    header: {\r",
+									"        'X-Amz-Target':   'AWSCognitoIdentityProviderService.InitiateAuth',\r",
+									"        'Content-Type': 'application/x-amz-json-1.1'\r",
+									"    },\r",
+									"    body: {\r",
+									"        mode: 'raw',\r",
+									"        raw: JSON.stringify({\r",
+									"            \"AuthParameters\": {\r",
+									"                \"USERNAME\": username,\r",
+									"                \"PASSWORD\": password\r",
+									"            },\r",
+									"            \"AuthFlow\": \"USER_PASSWORD_AUTH\",\r",
+									"            \"ClientId\": clientId\r",
+									"        }),\r",
+									"        options: {\r",
+									"            raw: {\r",
+									"                language: 'json'\r",
+									"            }\r",
+									"        }\r",
+									"    }\r",
+									"}, function (error, response) {\r",
+									"    pm.collectionVariables.set(\"ACCESS_TOKEN\", response.json().AuthenticationResult.AccessToken);\r",
+									"    pm.collectionVariables.set(\"ID_TOKEN\", response.json().AuthenticationResult.IdToken);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://google.com",
+							"protocol": "https",
+							"host": [
+								"google",
+								"com"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "documentation",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/{{ENV}}/postman",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"{{ENV}}",
+								"postman"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{ID_TOKEN}}",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "ID_TOKEN",
+			"value": ""
+		},
+		{
+			"key": "ACCESS_TOKEN",
+			"value": ""
+		}
+	]
+}
