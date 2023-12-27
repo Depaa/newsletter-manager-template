@@ -3,7 +3,7 @@ export const bodySchema = {
   properties: {
     title: { type: 'string', maxLength: 100 },
     description: { type: 'string', maxLength: 512 },
-    image: { type: 'string', maxLength: 100 },
+    image: { type: 'string', maxLength: 512 },
     content: { type: 'string', maxLength: 100 },
     contentMd: { type: 'string', maxLength: 100 },
     seo: {

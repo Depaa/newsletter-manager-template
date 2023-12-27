@@ -13,12 +13,17 @@ const main: Handler<void, FromSchema<typeof pathParametersSchema>, void> = async
       id: event.pathParameters.id
     })
     newsletter = result.Item as Newsletter
+    console.info('Successfully get newsletters')
+    console.info(newsletter)
   } catch (error) {
+    console.error(error)
     const result = await NewslettersTableDefinition.query(event.pathParameters.id, {
       limit: 1,
       index: 'slug-index',
       attributes: ['status', 'title', 'image', 'publishedAt', 'slug', 'description', 'content', 'seo', 'authors']
     })
+    console.info('Successfully get newsletters with query')
+    console.info(result)
     newsletter = (result.Items != null) && result.Items.length > 0 ? result.Items[0] as Newsletter : {}
   }
 

@@ -17,6 +17,12 @@ export function ApiStack ({ stack, app }: StackContext): void {
         standardAttributes: {
           email: { required: true, mutable: true }
         }
+      },
+      userPoolClient: {
+        authFlows: {
+          // for testing purposes only
+          userPassword: app.stage !== 'prod'
+        }
       }
     }
   })
@@ -47,13 +53,13 @@ export function ApiStack ({ stack, app }: StackContext): void {
       /**
        * Newsletter Subscribers
        */
-      'POST /newsletters/unsubscribe': {
+      'POST /subscriptions/{token}/unsubscribe': {
         authorizer: 'none',
-        function: 'packages/functions/src/newsletters/unsubscribe/index.handler'
+        function: 'packages/functions/src/subscriptions/unsubscribe/index.handler'
       },
-      'POST /newsletters/subscribe': {
+      'POST /subscriptions/subscribe': {
         authorizer: 'none',
-        function: 'packages/functions/src/newsletters/subscribe/index.handler'
+        function: 'packages/functions/src/subscriptions/subscribe/index.handler'
       },
       /**
        * Newsletters
@@ -76,7 +82,7 @@ export function ApiStack ({ stack, app }: StackContext): void {
       },
       'GET /newsletters/{id}': {
         authorizer: 'none',
-        function: 'packages/functions/src/newsletters/update/index.handler'
+        function: 'packages/functions/src/newsletters/get/index.handler'
       },
       /**
        * Documentation
@@ -91,5 +97,8 @@ export function ApiStack ({ stack, app }: StackContext): void {
   // show the api endpoint in the output
   stack.addOutputs({
     apiendpoint: api.url
+  })
+  stack.addOutputs({
+    cognitoClientId: auth.userPoolClientId
   })
 }

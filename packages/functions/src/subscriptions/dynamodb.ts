@@ -11,7 +11,7 @@ const translateConfig: TranslateConfig = { marshallOptions }
 export const DocumentClient = DynamoDBDocumentClient.from(new DynamoDBClient(), translateConfig)
 
 const SubscriptionsTable = new Table({
-  name: process.env.SUBSCRIPTIONS_TABLE_NAME ?? '',
+  name: process.env.NEWSLETTER_SUBSCRIBERS_TABLE_NAME ?? '',
   partitionKey: 'email',
   indexes: {
     'status-index': {
@@ -23,7 +23,7 @@ const SubscriptionsTable = new Table({
 })
 
 export const SubscriptionsTableDefinition = new Entity({
-  name: 'Newsletter',
+  name: 'Subscriptions',
   attributes: {
     email: { partitionKey: true },
     pk: { type: 'string', required: true, default: '1' },

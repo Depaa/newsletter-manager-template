@@ -3,7 +3,7 @@ import { ApiStack } from './stacks/ApiStack'
 import { PermissionStack } from './stacks/PermissionStack'
 import { DatabaseStack } from './stacks/DatabaseStack'
 import { Tags } from 'aws-cdk-lib/core'
-import { GithubDeploy } from './stacks/GithubDeploy'
+// import { GithubDeploy } from './stacks/GithubDeploy'
 
 export default {
   config (_input) {
@@ -42,6 +42,9 @@ export default {
     Tags.of(app).add('region', app.region)
 
     app.stack(DatabaseStack).stack(PermissionStack).stack(ApiStack)
-    app.stack(GithubDeploy)
+
+    // uncomment if you want to use github actions
+    // first run is local, then take the role arn and use it in your workflow
+    // app.stack(GithubDeploy)
   }
 } satisfies SSTConfig

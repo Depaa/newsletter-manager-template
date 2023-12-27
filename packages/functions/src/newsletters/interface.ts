@@ -15,6 +15,7 @@ export interface Newsletter {
   seo?: NewsletterSeo
   status: NewsletterStatus
   authors?: string[]
+  publishAt?: number
   publishedAt?: number
 
   // Audit and metadata information

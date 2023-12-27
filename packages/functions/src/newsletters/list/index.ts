@@ -46,6 +46,8 @@ const main: Handler<void, void, FromSchema<typeof queryStringParametersSchema>> 
       reverse: false,
       attributes: ['status', 'title', 'image', 'publishedAt', 'slug', 'description', 'content', 'seo', 'authors']
     })
+    console.info('Successfully listed newsletters')
+    console.debug(newsletters)
     items = newsletters.Items as Newsletter[] ?? []
     if (newsletters.LastEvaluatedKey != null) {
       nextToken = Buffer.from(JSON.stringify(newsletters.LastEvaluatedKey), 'utf-8').toString('base64')

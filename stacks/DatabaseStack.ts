@@ -2,11 +2,11 @@ import { RemovalPolicy } from 'aws-cdk-lib/core'
 import { Table, type StackContext } from 'sst/constructs'
 
 export function DatabaseStack ({ stack, app }: StackContext): Record<string, Table> {
-  const newsletterTable = new Table(stack, 'NewslettersTable', {
+  const newslettersTable = new Table(stack, 'NewslettersTable', {
     fields: {
       id: 'string',
-      state: 'string',
-      publishedAt: 'string',
+      status: 'string',
+      publishedAt: 'number',
       slug: 'string'
     },
     primaryIndex: { partitionKey: 'id' },
@@ -29,7 +29,7 @@ export function DatabaseStack ({ stack, app }: StackContext): Record<string, Tab
     },
     primaryIndex: { partitionKey: 'email' },
     globalIndexes: {
-      'status-index': { partitionKey: 'pk', sortKey: 'status' }
+      'status-index': { partitionKey: 'status' }
     },
     cdk: {
       table: {
@@ -39,7 +39,7 @@ export function DatabaseStack ({ stack, app }: StackContext): Record<string, Tab
   })
 
   return {
-    newsletterTable,
+    newslettersTable,
     newsletterSubscribersTable
   }
 }
