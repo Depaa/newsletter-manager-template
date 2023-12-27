@@ -15,7 +15,6 @@ export function PermissionStack ({ stack }: StackContext): Record<string, Role> 
   const {
     newslettersTable,
     newsletterSubscribersTable
-
   } = use(DatabaseStack)
 
   const newslettersTableAccess = new PolicyStatement({
@@ -52,7 +51,25 @@ export function PermissionStack ({ stack }: StackContext): Record<string, Role> 
     newsletterSubscribersTableAccess
   ])
 
+  /**
+   * Email permissions
+   */
+
+  const emailRole = new Role(stack, 'EmailRole', {
+    assumedBy: new ServicePrincipal('lambda.amazonaws.com'),
+    managedPolicies: [
+      {
+        managedPolicyArn: 'arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole'
+      }
+    ]
+  })
+  attachPermissionsToRole(emailRole, [
+    newslettersTableAccess,
+    newsletterSubscribersTableAccess
+  ])
+
   return {
-    apiRole
+    apiRole,
+    emailRole
   }
 }

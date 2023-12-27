@@ -3,6 +3,7 @@ import { ApiStack } from './stacks/ApiStack'
 import { PermissionStack } from './stacks/PermissionStack'
 import { DatabaseStack } from './stacks/DatabaseStack'
 import { Tags } from 'aws-cdk-lib/core'
+import { EmailStack } from './stacks/EmailStack'
 // import { GithubDeploy } from './stacks/GithubDeploy'
 
 export default {
@@ -41,7 +42,7 @@ export default {
     Tags.of(app).add('project', app.name)
     Tags.of(app).add('region', app.region)
 
-    app.stack(DatabaseStack).stack(PermissionStack).stack(ApiStack)
+    app.stack(DatabaseStack).stack(PermissionStack).stack(ApiStack).stack(EmailStack)
 
     // uncomment if you want to use github actions
     // first run is local, then take the role arn and use it in your workflow

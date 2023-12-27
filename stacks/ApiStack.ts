@@ -43,7 +43,8 @@ export function ApiStack ({ stack, app }: StackContext): void {
           NEWSLETTER_SUBSCRIBERS_TABLE_NAME: newsletterSubscribersTable.tableName
         },
         timeout: 29,
-        bind: [newslettersTable, newsletterSubscribersTable]
+        bind: [newslettersTable, newsletterSubscribersTable],
+        architecture: 'arm_64'
       }
     },
     accessLog: {

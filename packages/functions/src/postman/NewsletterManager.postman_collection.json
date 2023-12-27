@@ -31,6 +31,25 @@
 							"response": []
 						},
 						{
+							"name": "get slug",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{BASE_URL}}/{{ENV}}/newsletters/{{NEWSLETTER_SLUG}}",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"{{ENV}}",
+										"newsletters",
+										"{{NEWSLETTER_SLUG}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
 							"name": "update",
 							"event": [
 								{
@@ -51,7 +70,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"userId\": \"user123\",\r\n    \"providerId\": \"PROVIDERRRRRRRRRRRRRRRR\",\r\n    \"startTime\": 1642800000,\r\n    \"endTime\": 1642803600,\r\n    \"notes\": \"Regular checkup\"\r\n}",
+									"raw": "{\r\n  \"title\": \"Sample Title\",\r\n  \"slug\": \"samle-title-slug\",\r\n  \"description\": \"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.\",\r\n  \"image\": \"https://content.cloudnature.net/images/c8e8638b-2b3e-4231-81d3-e6374299726b/61b67e5e-0f52-4ec9-9fea-81f1590a9c16\",\r\n  \"content\": \"This is the main content of the article.\",\r\n  \"contentMd\": \"Markdown content goes here.\",\r\n  \"seo\": {\r\n    \"title\": \"SEO Title\",\r\n    \"description\": \"SEO description for better search results.\",\r\n    \"tags\": [\"tag1\", \"tag2\", \"tag3\"]\r\n  },\r\n  \"publishAt\": 1703663913534\r\n}\r\n",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -105,21 +124,14 @@
 					]
 				},
 				{
-					"name": "subscribe",
-					"item": []
-				},
-				{
-					"name": "unsubscribe",
-					"item": []
-				},
-				{
 					"name": "create",
 					"event": [
 						{
 							"listen": "test",
 							"script": {
 								"exec": [
-									"pm.collectionVariables.set(\"NEWSLETTER_ID\", JSON.parse(responseBody).id);"
+									"pm.collectionVariables.set(\"NEWSLETTER_ID\", JSON.parse(responseBody).id);\r",
+									"pm.collectionVariables.set(\"NEWSLETTER_SLUG\", JSON.parse(responseBody).slug);"
 								],
 								"type": "text/javascript"
 							}
@@ -133,7 +145,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"userId\": \"user123\",\r\n    \"providerId\": \"doctor456\",\r\n    \"startTime\": 1642800000,\r\n    \"endTime\": 1642803600,\r\n    \"notes\": \"Regular checkup\"\r\n}",
+							"raw": "{\r\n  \"title\": \"Sample Title\",\r\n  \"description\": \"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.\",\r\n  \"image\": \"https://content.cloudnature.net/images/c8e8638b-2b3e-4231-81d3-e6374299726b/61b67e5e-0f52-4ec9-9fea-81f1590a9c16\",\r\n  \"content\": \"This is the main content of the article.\",\r\n  \"contentMd\": \"Markdown content goes here.\",\r\n  \"seo\": {\r\n    \"title\": \"SEO Title\",\r\n    \"description\": \"SEO description for better search results.\",\r\n    \"tags\": [\"tag1\", \"tag2\", \"tag3\"]\r\n  }\r\n}\r\n",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -165,6 +177,159 @@
 							],
 							"path": [
 								"{{ENV}}",
+								"newsletters"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "subscriptions",
+			"item": [
+				{
+					"name": "subscribe",
+					"item": [
+						{
+							"name": "create",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"disabledSystemHeaders": {}
+							},
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"email\": \"depascale.matteo@gmail.com\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{BASE_URL}}/{{ENV}}/subscriptions/subscribe",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"{{ENV}}",
+										"subscriptions",
+										"subscribe"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": ":token",
+					"item": [
+						{
+							"name": "unsubscribe",
+							"item": [
+								{
+									"name": "create",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													""
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"protocolProfileBehavior": {
+										"disabledSystemHeaders": {}
+									},
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"email\": \"depascale.matteo@gmail.com\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{BASE_URL}}/{{ENV}}/subscriptions/:token/unsubscribe",
+											"host": [
+												"{{BASE_URL}}"
+											],
+											"path": [
+												"{{ENV}}",
+												"subscriptions",
+												":token",
+												"unsubscribe"
+											],
+											"variable": [
+												{
+													"key": "token",
+													"value": ""
+												}
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						}
+					]
+				},
+				{
+					"name": "list",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/{{ENV}}/subscriptions/newsletters",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"{{ENV}}",
+								"subscriptions",
 								"newsletters"
 							]
 						}
@@ -310,10 +475,30 @@
 	"variable": [
 		{
 			"key": "ID_TOKEN",
+			"value": "ID_TOKEN"
+		},
+		{
+			"key": "ID_TOKEN",
 			"value": ""
 		},
 		{
 			"key": "ACCESS_TOKEN",
+			"value": ""
+		},
+		{
+			"key": "APPOINTMENT_ID",
+			"value": ""
+		},
+		{
+			"key": "PROVIDER_ID",
+			"value": ""
+		},
+		{
+			"key": "SERVICE_ID",
+			"value": ""
+		},
+		{
+			"key": "NEWSLETTER_ID",
 			"value": ""
 		}
 	]
