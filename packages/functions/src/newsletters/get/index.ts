@@ -8,23 +8,23 @@ import { isAdmin } from '@core/libs/authorizer'
 
 const main: Handler<void, FromSchema<typeof pathParametersSchema>, void> = async (event) => {
   let newsletter: Newsletter | Record<string, unknown> = {}
-  try {
-    const result = await NewslettersTableDefinition.get({
-      id: event.pathParameters.id
-    })
-    newsletter = result.Item as Newsletter
-    console.info('Successfully get newsletters')
-    console.info(newsletter)
-  } catch (error) {
-    console.error(error)
-    const result = await NewslettersTableDefinition.query(event.pathParameters.id, {
+
+  const resultById = await NewslettersTableDefinition.get({
+    id: event.pathParameters.id
+  })
+  newsletter = resultById.Item as Newsletter
+  console.info('Successfully get newsletters')
+  console.debug(newsletter)
+
+  if (resultById.Item === undefined) {
+    const resultBySlug = await NewslettersTableDefinition.query(event.pathParameters.id, {
       limit: 1,
       index: 'slug-index',
       attributes: ['status', 'title', 'image', 'publishedAt', 'slug', 'description', 'content', 'seo', 'authors']
     })
     console.info('Successfully get newsletters with query')
-    console.info(result)
-    newsletter = (result.Items != null) && result.Items.length > 0 ? result.Items[0] as Newsletter : {}
+    console.debug(resultBySlug)
+    newsletter = (resultBySlug.Items != null) && resultBySlug.Items.length > 0 ? resultBySlug.Items[0] as Newsletter : {}
   }
 
   if (!isAdmin(event.requestContext) && newsletter.status === 'PRIVATE') {
