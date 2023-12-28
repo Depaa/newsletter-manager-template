@@ -9,7 +9,8 @@ Newsletter Backend Orchestration Template in AWS with SST
 ## How to run
 
 1. Replace string in `.env`
-  * DOMAIN_NAME or EMAIL_ADDRESS
+    * `DOMAIN_NAME` or `EMAIL_ADDRESS`
+    * `ALERTING_EMAIL_ADDRESS`
 
 
 ---
