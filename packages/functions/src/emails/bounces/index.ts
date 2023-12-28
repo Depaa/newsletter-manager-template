@@ -1,7 +1,7 @@
 import { type Handler, middyfy } from '@core/libs/middyWrapper'
 
 const main: Handler<void, void, void> = async (event) => {
-  console.debug(event)
+  console.debug(JSON.stringify(event))
 
   /**
    * TODO
