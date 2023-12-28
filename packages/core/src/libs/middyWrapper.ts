@@ -98,7 +98,7 @@ export const middyfy = (
     .use(httpHeaderNormalizerMiddleware())
     .use(httpUrlencodePathParametersParserMiddleware())
     .use(httpSecurityHeadersMiddleware())
-    .use(httpCorsMiddleware())
+    // .use(httpCorsMiddleware()) // TODO
     .use(httpContentEncodingMiddleware())
     .use(httpErrorHandlerMiddleware({}))
     .use(

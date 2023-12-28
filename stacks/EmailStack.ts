@@ -5,7 +5,7 @@ import { DatabaseStack } from './DatabaseStack'
 import { PermissionStack } from './PermissionStack'
 import { DnsValidatedDomainIdentity } from 'aws-cdk-ses-domain-identity'
 
-export function EmailStack ({ stack, app }: StackContext): Record<string, ConfigurationSet> {
+export function EmailStack ({ stack, app }: StackContext): Record<string, string> {
   const {
     newslettersTable,
     newsletterSubscribersTable
@@ -86,7 +86,10 @@ export function EmailStack ({ stack, app }: StackContext): Record<string, Config
     events: [EmailSendingEvent.REJECT, EmailSendingEvent.RENDERING_FAILURE, EmailSendingEvent.DELIVERY_DELAY]
   })
 
+  let identityName = ''
+
   if (process.env.DOMAIN_NAME !== '' && process.env.DOMAIN_NAME !== undefined) {
+    identityName = process.env.DOMAIN_NAME
     const hostedZone = HostedZone.fromLookup(stack, 'HostedZone', {
       domainName: process.env.DOMAIN_NAME
     })
@@ -99,6 +102,7 @@ export function EmailStack ({ stack, app }: StackContext): Record<string, Config
       hostedZone
     })
   } else if (process.env.EMAIL_ADDRESS !== '' && process.env.EMAIL_ADDRESS !== undefined) {
+    identityName = process.env.EMAIL_ADDRESS
     // eslint-disable-next-line no-new
     new EmailIdentity(stack, 'EmailIdentity', {
       identity: Identity.email(process.env.EMAIL_ADDRESS),
@@ -111,6 +115,6 @@ export function EmailStack ({ stack, app }: StackContext): Record<string, Config
   new VdmAttributes(stack, 'VdmTracking')
 
   return {
-    configurationSet
+    identityName
   }
 }

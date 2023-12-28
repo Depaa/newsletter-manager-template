@@ -16,8 +16,7 @@ export const bodySchema = {
       },
       required: ['title', 'description'],
       additionalProperties: false
-    },
-    publishAt: { type: 'number' }
+    }
   },
   additionalProperties: false
 } as const

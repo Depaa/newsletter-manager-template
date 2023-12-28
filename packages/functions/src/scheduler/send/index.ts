@@ -1,13 +1,8 @@
 import { type Handler, middyfy } from '@core/libs/middyWrapper'
-
+import { marshall, unmarshall } from '@aws-sdk/util-dynamodb'
+// let myItem = unmarshall(getFromSf())
 const main: Handler<void, void, void> = async (event) => {
   console.debug(event)
-
-  /**
-   * TODO
-   * if soft bounce, then ok
-   * if hard bounce, then remove the email from the newsletter
-   */
 
   return {
     statusCode: 200,
