@@ -1,4 +1,4 @@
-import { Policy, PolicyStatement, Role, ServicePrincipal } from 'aws-cdk-lib/aws-iam'
+import { PolicyStatement, Role, ServicePrincipal } from 'aws-cdk-lib/aws-iam'
 import { LogGroup } from 'aws-cdk-lib/aws-logs'
 import { Chain, DefinitionBody, Fail, LogLevel, StateMachine, StateMachineType, Succeed, TaskInput, Wait, WaitTime } from 'aws-cdk-lib/aws-stepfunctions'
 import { CallAwsService, LambdaInvoke, SnsPublish } from 'aws-cdk-lib/aws-stepfunctions-tasks'
@@ -162,64 +162,72 @@ export const SchedulerStack = ({ stack, app }: StackContext): Record<string, Sta
    */
   const emailStateMachineDefinition = Chain.start(sendTestEmailState).next(waitState).next(updateNewsletterContentStateSDK).next(getNewsletterContentStateSDK).next(sendEmailState).next(succeedState)
 
-  const emailStateMachineLogGroup = new LogGroup(stack, 'EmailStateMachineLogGroup')
+  /**
+   * Lambda function proper role
+   */
+  const sfnRole = new Role(stack, 'SendEmailSfnRole', {
+    assumedBy: new ServicePrincipal(`states.${stack.region}.amazonaws.com`)
+  })
+  const publishToTopicPolicy = new PolicyStatement({
+    actions: ['sns:Publish'],
+    resources: [alertingTopic.topicArn]
+  })
+  const invokeFunctionPolicy = new PolicyStatement({
+    actions: ['lambda:InvokeFunction'],
+    resources: [
+      sendEmailFunction.functionArn,
+      `${sendEmailFunction.functionArn}:*`
+    ]
+  })
+  const getItemPolicy = new PolicyStatement({
+    actions: ['dynamodb:GetItem'],
+    resources: [
+      newslettersTable.tableArn,
+          `${newslettersTable.tableArn}/*`
+    ]
+  })
+  const updateItemPolicy = new PolicyStatement({
+    actions: ['dynamodb:UpdateItem'],
+    resources: [
+      newslettersTable.tableArn,
+          `${newslettersTable.tableArn}/*`
+    ]
+  })
+  const logGroupPolicy = new PolicyStatement({
+    actions: [
+      'logs:CreateLogDelivery',
+      'logs:GetLogDelivery',
+      'logs:UpdateLogDelivery',
+      'logs:DeleteLogDelivery',
+      'logs:ListLogDeliveries',
+      'logs:PutResourcePolicy',
+      'logs:DescribeResourcePolicies',
+      'logs:DescribeLogGroups'
+    ],
+    resources: [
+      '*'
+    ]
+  })
+
+  attachPermissionsToRole(sfnRole, [
+    newslettersTableAccess,
+    publishToTopicPolicy,
+    invokeFunctionPolicy,
+    getItemPolicy,
+    updateItemPolicy,
+    logGroupPolicy
+  ])
+
   const emailStateMachine = new StateMachine(stack, 'EmailStateMachine', {
     definitionBody: DefinitionBody.fromChainable(emailStateMachineDefinition),
     stateMachineType: StateMachineType.STANDARD,
+    role: sfnRole,
     logs: {
       includeExecutionData: true,
       level: LogLevel.ALL,
-      destination: emailStateMachineLogGroup
+      destination: new LogGroup(stack, 'EmailStateMachineLogGroup')
     }
   })
-
-  /**
-   * Add proper permissions for state machine
-   */
-  emailStateMachine.role?.attachInlinePolicy(
-    new Policy(stack, 'EmailStateMachinePermissions', {
-      statements: [
-        new PolicyStatement({
-          actions: ['sns:Publish'],
-          resources: [alertingTopic.topicArn]
-        }),
-        new PolicyStatement({
-          actions: ['lambda:InvokeFunction'],
-          resources: [sendEmailFunction.functionArn]
-        }),
-        new PolicyStatement({
-          actions: ['dynamodb:GetItem'],
-          resources: [
-            newslettersTable.tableArn,
-            `${newslettersTable.tableArn}/*`
-          ]
-        }),
-        new PolicyStatement({
-          actions: ['logs:CreateLogStream', 'logs:PutLogEvents'],
-          resources: [
-            emailStateMachineLogGroup.logGroupArn
-          ]
-        })
-      ]
-    })
-  )
-
-  /**
-   * Add proper permissions for lambda
-   */
-  const emailStateMachineAccess = new PolicyStatement({
-    actions: [
-      'states:StartExecution',
-      'states:StopExecution'
-    ],
-    resources: [
-      emailStateMachine.stateMachineArn,
-      `arn:aws:states:${stack.region}:${stack.account}:execution:${emailStateMachine.stateMachineName}:*`
-    ]
-  })
-  attachPermissionsToRole(emailRole, [
-    emailStateMachineAccess
-  ])
 
   stack.addOutputs({
     EmailStateMachine: emailStateMachine.stateMachineName

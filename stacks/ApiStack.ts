@@ -43,6 +43,7 @@ export const ApiStack = ({ stack, app }: StackContext): void => {
         environment: {
           NEWSLETTERS_TABLE_NAME: newslettersTable.tableName,
           NEWSLETTER_SUBSCRIBERS_TABLE_NAME: newsletterSubscribersTable.tableName,
+          EMAIL_SCHEDULER_SFN_SM_ARN: `arn:aws:states:${stack.region}:${stack.account}:execution:${emailStateMachine.stateMachineName}`,
           EMAIL_SCHEDULER_SF_ARN: emailStateMachine.stateMachineArn
         },
         timeout: 29,

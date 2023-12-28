@@ -14,7 +14,7 @@ const main: Handler<FromSchema<typeof bodySchema>, FromSchema<typeof pathParamet
   const updateParams = {
     ...event.body,
     id,
-    sfExecutionArn: `${process.env.EMAIL_SCHEDULER_SF_ARN}:${uuid}`,
+    sfExecutionArn: `${process.env.EMAIL_SCHEDULER_SFN_SM_ARN}:${uuid}`,
     updatedAt: Date.now(),
     updatedBy: event.requestContext?.authorizer?.claims.sub
   }

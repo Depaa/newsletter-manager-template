@@ -48,9 +48,7 @@ export default {
 
     app.stack(EmailStack)
 
-    app
-      .stack(AlertingStack).stack(SchedulerStack)
-      .stack(ApiPermissionStack).stack(ApiStack)
+    app.stack(AlertingStack).stack(SchedulerStack).stack(ApiPermissionStack).stack(ApiStack)
 
     // uncomment if you want to use github actions
     // first run is local, then take the role arn and use it in your workflow
