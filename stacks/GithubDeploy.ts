@@ -3,7 +3,7 @@ import { Effect, OpenIdConnectPrincipal, OpenIdConnectProvider, PolicyDocument, 
 import { type StackContext } from 'sst/constructs'
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-export function GithubDeploy ({ app, stack }: StackContext) {
+export const GithubDeploy = ({ app, stack }: StackContext) => {
   if (app.stage === 'dev' || app.stage === 'prod') {
     const provider = new OpenIdConnectProvider(stack, 'GitHub', {
       url: 'https://token.actions.githubusercontent.com',

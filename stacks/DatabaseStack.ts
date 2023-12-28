@@ -1,7 +1,7 @@
 import { RemovalPolicy } from 'aws-cdk-lib/core'
 import { Table, type StackContext } from 'sst/constructs'
 
-export function DatabaseStack ({ stack, app }: StackContext): Record<string, Table> {
+export const DatabaseStack = async ({ stack, app }: StackContext): Promise<Record<string, Table>> => {
   const newslettersTable = new Table(stack, 'NewslettersTable', {
     fields: {
       id: 'string',

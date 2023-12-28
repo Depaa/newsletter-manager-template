@@ -1,8 +1,16 @@
 import { PolicyStatement, Role, ServicePrincipal } from 'aws-cdk-lib/aws-iam'
-import { attachPermissionsToRole, type StackContext, use } from 'sst/constructs'
+import { attachPermissionsToRole, use, type StackContext } from 'sst/constructs'
 import { DatabaseStack } from './DatabaseStack'
+import { SchedulerStack } from './SchedulerStack'
 
-export function PermissionStack ({ stack }: StackContext): Record<string, Role> {
+export const ApiPermissionStack = ({ stack }: StackContext): Record<string, Role> => {
+  const {
+    newslettersTable,
+    newsletterSubscribersTable
+  } = use(DatabaseStack)
+
+  const { emailStateMachine } = use(SchedulerStack)
+
   // Create an IAM role
   const apiRole = new Role(stack, 'ApiRole', {
     assumedBy: new ServicePrincipal('lambda.amazonaws.com'),
@@ -12,11 +20,6 @@ export function PermissionStack ({ stack }: StackContext): Record<string, Role> 
       }
     ]
   })
-  const {
-    newslettersTable,
-    newsletterSubscribersTable
-  } = use(DatabaseStack)
-
   const newslettersTableAccess = new PolicyStatement({
     actions: [
       'dynamodb:PutItem',
@@ -45,31 +48,24 @@ export function PermissionStack ({ stack }: StackContext): Record<string, Role> 
       `${newsletterSubscribersTable.tableArn}/*`
     ]
   })
+  const emailStateMachineAccess = new PolicyStatement({
+    actions: [
+      'states:StartExecution',
+      'states:StopExecution'
+    ],
+    resources: [
+      emailStateMachine.stateMachineArn,
+      `arn:aws:states:${stack.region}:${stack.account}:execution:${emailStateMachine.stateMachineName}:*`
+    ]
+  })
 
   attachPermissionsToRole(apiRole, [
     newslettersTableAccess,
-    newsletterSubscribersTableAccess
-  ])
-
-  /**
-   * Email permissions
-   */
-
-  const emailRole = new Role(stack, 'EmailRole', {
-    assumedBy: new ServicePrincipal('lambda.amazonaws.com'),
-    managedPolicies: [
-      {
-        managedPolicyArn: 'arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole'
-      }
-    ]
-  })
-  attachPermissionsToRole(emailRole, [
-    newslettersTableAccess,
-    newsletterSubscribersTableAccess
+    newsletterSubscribersTableAccess,
+    emailStateMachineAccess
   ])
 
   return {
-    apiRole,
-    emailRole
+    apiRole
   }
 }

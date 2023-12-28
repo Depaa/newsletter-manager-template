@@ -1,13 +1,15 @@
-import { Cognito, type StackContext, use, ApiGatewayV1Api } from 'sst/constructs'
-import { PermissionStack } from './PermissionStack'
+import { ApiGatewayV1Api, Cognito, use, type StackContext } from 'sst/constructs'
+import { ApiPermissionStack } from './ApiPermissionStack'
 import { DatabaseStack } from './DatabaseStack'
+import { SchedulerStack } from './SchedulerStack'
 
-export function ApiStack ({ stack, app }: StackContext): void {
-  const { apiRole } = use(PermissionStack)
+export const ApiStack = ({ stack, app }: StackContext): void => {
+  const { apiRole } = use(ApiPermissionStack)
   const {
     newslettersTable,
     newsletterSubscribersTable
   } = use(DatabaseStack)
+  const { emailStateMachine } = use(SchedulerStack)
 
   // https://docs.sst.dev/constructs/Cognito
   const auth = new Cognito(stack, 'Auth', {
@@ -40,7 +42,8 @@ export function ApiStack ({ stack, app }: StackContext): void {
         role: apiRole,
         environment: {
           NEWSLETTERS_TABLE_NAME: newslettersTable.tableName,
-          NEWSLETTER_SUBSCRIBERS_TABLE_NAME: newsletterSubscribersTable.tableName
+          NEWSLETTER_SUBSCRIBERS_TABLE_NAME: newsletterSubscribersTable.tableName,
+          EMAIL_SCHEDULER_SF_ARN: emailStateMachine.stateMachineArn
         },
         timeout: 29,
         bind: [newslettersTable, newsletterSubscribersTable],
@@ -56,41 +59,79 @@ export function ApiStack ({ stack, app }: StackContext): void {
        */
       'POST /subscriptions/{token}/unsubscribe': {
         authorizer: 'none',
-        function: 'packages/functions/src/subscriptions/unsubscribe/index.handler'
+        function: {
+          handler: 'packages/functions/src/subscriptions/unsubscribe/index.handler',
+          functionName: `${stack.stackName}-post-unsubscribe`
+        }
       },
       'POST /subscriptions/subscribe': {
         authorizer: 'none',
-        function: 'packages/functions/src/subscriptions/subscribe/index.handler'
+        function: {
+          handler: 'packages/functions/src/subscriptions/subscribe/index.handler',
+          functionName: `${stack.stackName}-post-subscribe`
+        }
       },
       /**
        * Newsletters
        */
       'POST /newsletters': {
         authorizer: 'jwt',
-        function: 'packages/functions/src/newsletters/create/index.handler'
+        function: {
+          handler: 'packages/functions/src/newsletters/create/index.handler',
+          functionName: `${stack.stackName}-post-newsletters`
+        }
       },
       'PUT /newsletters/{id}': {
         authorizer: 'jwt',
-        function: 'packages/functions/src/newsletters/update/index.handler'
+        function: {
+          handler: 'packages/functions/src/newsletters/update/index.handler',
+          functionName: `${stack.stackName}-put-newsletters`
+        }
       },
       'DELETE /newsletters/{id}': {
         authorizer: 'jwt',
-        function: 'packages/functions/src/newsletters/delete/index.handler'
+        function: {
+          handler: 'packages/functions/src/newsletters/delete/index.handler',
+          functionName: `${stack.stackName}-delete-newsletters`
+        }
       },
       'GET /newsletters': {
         authorizer: 'none',
-        function: 'packages/functions/src/newsletters/list/index.handler'
+        function: {
+          handler: 'packages/functions/src/newsletters/list/index.handler',
+          functionName: `${stack.stackName}-list-newsletters`
+        }
       },
       'GET /newsletters/{id}': {
         authorizer: 'none',
-        function: 'packages/functions/src/newsletters/get/index.handler'
+        function: {
+          handler: 'packages/functions/src/newsletters/get/index.handler',
+          functionName: `${stack.stackName}-get-newsletters`
+        }
+      },
+      'POST /newsletters/{id}/schedule/publish': {
+        authorizer: 'jwt',
+        function: {
+          handler: 'packages/functions/src/newsletters/publish/index.handler',
+          functionName: `${stack.stackName}-post-schedule-publish`
+        }
+      },
+      'POST /newsletters/{id}/schedule/unpublish': {
+        authorizer: 'jwt',
+        function: {
+          handler: 'packages/functions/src/newsletters/unpublish/index.handler',
+          functionName: `${stack.stackName}-post-schedule-unpublish`
+        }
       },
       /**
        * Documentation
        */
       'GET /postman': {
         authorizer: 'jwt',
-        function: 'packages/functions/src/postman/index.handler'
+        function: {
+          handler: 'packages/functions/src/postman/index.handler',
+          functionName: `${stack.stackName}-get-postman`
+        }
       }
     }
   })

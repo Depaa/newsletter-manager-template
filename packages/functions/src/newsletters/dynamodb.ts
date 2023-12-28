@@ -39,6 +39,7 @@ export const NewslettersTableDefinition = new Entity({
     authors: { type: 'list' },
     publishAt: { type: 'number' },
     publishedAt: { type: 'number' },
+    sfExecutionArn: { type: 'string' },
     createdAt: { type: 'number', required: true },
     createdBy: { type: 'string', required: true },
     updatedAt: { type: 'number' },

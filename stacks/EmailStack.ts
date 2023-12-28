@@ -1,16 +1,44 @@
+import { PolicyStatement, Role, ServicePrincipal } from 'aws-cdk-lib/aws-iam'
 import { HostedZone } from 'aws-cdk-lib/aws-route53'
 import { ConfigurationSet, ConfigurationSetTlsPolicy, EmailIdentity, EmailSendingEvent, EventDestination, Identity, VdmAttributes } from 'aws-cdk-lib/aws-ses'
-import { Topic, type StackContext, use } from 'sst/constructs'
-import { DatabaseStack } from './DatabaseStack'
-import { PermissionStack } from './PermissionStack'
 import { DnsValidatedDomainIdentity } from 'aws-cdk-ses-domain-identity'
+import { Topic, attachPermissionsToRole, use, type StackContext } from 'sst/constructs'
+import { DatabaseStack } from './DatabaseStack'
 
-export function EmailStack ({ stack, app }: StackContext): Record<string, string> {
+export const EmailStack = ({ stack, app }: StackContext): Record<string, string> => {
   const {
     newslettersTable,
     newsletterSubscribersTable
   } = use(DatabaseStack)
-  const { emailRole } = use(PermissionStack)
+
+  /**
+   * Lambda function proper role
+   */
+  const newsletterSubscribersTableAccess = new PolicyStatement({
+    actions: [
+      'dynamodb:PutItem',
+      'dynamodb:DeleteItem',
+      'dynamodb:UpdateItem',
+      'dynamodb:GetItem',
+      'dynamodb:Scan',
+      'dynamodb:Query'
+    ],
+    resources: [
+      newsletterSubscribersTable.tableArn,
+        `${newsletterSubscribersTable.tableArn}/*`
+    ]
+  })
+  const emailRole = new Role(stack, 'EmailRole', {
+    assumedBy: new ServicePrincipal('lambda.amazonaws.com'),
+    managedPolicies: [
+      {
+        managedPolicyArn: 'arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole'
+      }
+    ]
+  })
+  attachPermissionsToRole(emailRole, [
+    newsletterSubscribersTableAccess
+  ])
 
   /**
    * Create Topics and Subscribers
@@ -29,7 +57,12 @@ export function EmailStack ({ stack, app }: StackContext): Record<string, string
     }
   })
   bouncesTopic.addSubscribers(stack, {
-    lambda: 'packages/functions/src/emails/bounces/index.handler'
+    lambda: {
+      function: {
+        handler: 'packages/functions/src/emails/bounces/index.handler',
+        functionName: `${stack.stackName}-emails-bounces`
+      }
+    }
   })
 
   const complaintsTopic = new Topic(stack, 'Complaints', {
@@ -46,7 +79,12 @@ export function EmailStack ({ stack, app }: StackContext): Record<string, string
     }
   })
   complaintsTopic.addSubscribers(stack, {
-    lambda: 'packages/functions/src/emails/complaints/index.handler'
+    lambda: {
+      function: {
+        handler: 'packages/functions/src/emails/complaints/index.handler',
+        functionName: `${stack.stackName}-emails-complaints`
+      }
+    }
   })
 
   const genericErrorsTopic = new Topic(stack, 'GenericErrors', {
@@ -63,7 +101,12 @@ export function EmailStack ({ stack, app }: StackContext): Record<string, string
     }
   })
   genericErrorsTopic.addSubscribers(stack, {
-    lambda: 'packages/functions/src/emails/generic-errors/index.handler'
+    lambda: {
+      function: {
+        handler: 'packages/functions/src/emails/generic-errors/index.handler',
+        functionName: `${stack.stackName}-emails-generic-errors`
+      }
+    }
   })
 
   /**

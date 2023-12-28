@@ -1,18 +1,16 @@
-import { Policy, PolicyStatement } from 'aws-cdk-lib/aws-iam'
+import { Policy, PolicyStatement, Role, ServicePrincipal } from 'aws-cdk-lib/aws-iam'
+import { LogGroup } from 'aws-cdk-lib/aws-logs'
 import { Chain, DefinitionBody, Fail, LogLevel, StateMachine, StateMachineType, Succeed, TaskInput, Wait, WaitTime } from 'aws-cdk-lib/aws-stepfunctions'
 import { CallAwsService, LambdaInvoke, SnsPublish } from 'aws-cdk-lib/aws-stepfunctions-tasks'
-import { Function, use, type StackContext } from 'sst/constructs'
+import { Function, attachPermissionsToRole, use, type StackContext } from 'sst/constructs'
 import { AlertingStack } from './AlertingStack'
 import { DatabaseStack } from './DatabaseStack'
-import { PermissionStack } from './PermissionStack'
-import { LogGroup } from 'aws-cdk-lib/aws-logs'
 
-export function SchedulerStack ({ stack, app }: StackContext): void {
+export const SchedulerStack = ({ stack, app }: StackContext): Record<string, StateMachine> => {
   const {
     newslettersTable,
     newsletterSubscribersTable
   } = use(DatabaseStack)
-  const { emailRole } = use(PermissionStack)
   const { alertingTopic } = use(AlertingStack)
 
   /**
@@ -29,10 +27,55 @@ export function SchedulerStack ({ stack, app }: StackContext): void {
   }).next(failState)
 
   /**
+   * Lambda function proper role
+   */
+  const newslettersTableAccess = new PolicyStatement({
+    actions: [
+      'dynamodb:PutItem',
+      'dynamodb:DeleteItem',
+      'dynamodb:UpdateItem',
+      'dynamodb:GetItem',
+      'dynamodb:Scan',
+      'dynamodb:Query'
+    ],
+    resources: [
+      newslettersTable.tableArn,
+      `${newslettersTable.tableArn}/*`
+    ]
+  })
+  const newsletterSubscribersTableAccess = new PolicyStatement({
+    actions: [
+      'dynamodb:PutItem',
+      'dynamodb:DeleteItem',
+      'dynamodb:UpdateItem',
+      'dynamodb:GetItem',
+      'dynamodb:Scan',
+      'dynamodb:Query'
+    ],
+    resources: [
+      newsletterSubscribersTable.tableArn,
+      `${newsletterSubscribersTable.tableArn}/*`
+    ]
+  })
+  const emailRole = new Role(stack, 'SendEmailRole', {
+    assumedBy: new ServicePrincipal('lambda.amazonaws.com'),
+    managedPolicies: [
+      {
+        managedPolicyArn: 'arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole'
+      }
+    ]
+  })
+  attachPermissionsToRole(emailRole, [
+    newslettersTableAccess,
+    newsletterSubscribersTableAccess
+  ])
+
+  /**
    * Lambda function sending emails
    */
   const sendEmailFunction = new Function(stack, 'SendEmailFunction', {
     handler: 'packages/functions/src/scheduler/send/index.handler',
+    functionName: `${stack.stackName}-emails-send`,
     role: emailRole,
     environment: {
       NEWSLETTERS_TABLE_NAME: newslettersTable.tableName,
@@ -161,7 +204,28 @@ export function SchedulerStack ({ stack, app }: StackContext): void {
     })
   )
 
+  /**
+   * Add proper permissions for lambda
+   */
+  const emailStateMachineAccess = new PolicyStatement({
+    actions: [
+      'states:StartExecution',
+      'states:StopExecution'
+    ],
+    resources: [
+      emailStateMachine.stateMachineArn,
+      `arn:aws:states:${stack.region}:${stack.account}:execution:${emailStateMachine.stateMachineName}:*`
+    ]
+  })
+  attachPermissionsToRole(emailRole, [
+    emailStateMachineAccess
+  ])
+
   stack.addOutputs({
     EmailStateMachine: emailStateMachine.stateMachineName
   })
+
+  return {
+    emailStateMachine
+  }
 }

@@ -17,6 +17,7 @@ export interface Newsletter {
   authors?: string[]
   publishAt?: number
   publishedAt?: number
+  sfExecutionArn?: string
 
   // Audit and metadata information
   createdAt: number
