@@ -1,6 +1,6 @@
 import { PolicyStatement, Role, ServicePrincipal } from 'aws-cdk-lib/aws-iam'
 import { LogGroup } from 'aws-cdk-lib/aws-logs'
-import { Chain, DefinitionBody, Fail, LogLevel, StateMachine, StateMachineType, Succeed, TaskInput, Wait, WaitTime } from 'aws-cdk-lib/aws-stepfunctions'
+import { Chain, Choice, Condition, DefinitionBody, Fail, LogLevel, Parallel, StateMachine, StateMachineType, Succeed, TaskInput, Wait, WaitTime } from 'aws-cdk-lib/aws-stepfunctions'
 import { CallAwsService, LambdaInvoke, SnsPublish } from 'aws-cdk-lib/aws-stepfunctions-tasks'
 import { Function, attachPermissionsToRole, use, type StackContext } from 'sst/constructs'
 import { AlertingStack } from './AlertingStack'
@@ -81,8 +81,29 @@ export const SchedulerStack = ({ stack, app }: StackContext): Record<string, Sta
       NEWSLETTERS_TABLE_NAME: newslettersTable.tableName,
       NEWSLETTER_SUBSCRIBERS_TABLE_NAME: newsletterSubscribersTable.tableName
     },
-    timeout: 29,
+    timeout: '300 seconds',
     bind: [newslettersTable, newsletterSubscribersTable]
+  })
+
+  /**
+   * Get Newsletter Test Content
+   */
+  const getNewsletterContentTestStateSDK = new CallAwsService(stack, 'GetNewsletterContentTestStateSDK', {
+    service: 'dynamodb',
+    action: 'getItem',
+    parameters: {
+      TableName: newslettersTable.cdk.table.tableName,
+      Key: {
+        id: {
+          'S.$': '$.id'
+        }
+      }
+    },
+    iamResources: [
+      newslettersTable.cdk.table.tableArn,
+        `${newslettersTable.cdk.table.tableArn}/*`
+    ],
+    resultPath: '$.body'
   })
 
   /**
@@ -91,7 +112,12 @@ export const SchedulerStack = ({ stack, app }: StackContext): Record<string, Sta
   const sendTestEmailState = new LambdaInvoke(stack, 'SendTestEmailState', {
     lambdaFunction: sendEmailFunction,
     resultPath: '$.sent'
-  }).addCatch(publishErrorState)
+  })
+
+  /**
+   * Create Parallel State
+   */
+  const parallel = new Parallel(stack, 'ParallelState').addCatch(publishErrorState)
 
   /**
    * Wait publishAt timestamp
@@ -128,7 +154,7 @@ export const SchedulerStack = ({ stack, app }: StackContext): Record<string, Sta
       `${newslettersTable.cdk.table.tableArn}/*`
     ],
     resultPath: '$.updateResult'
-  }).addCatch(publishErrorState)
+  })
 
   /**
    * Get Newsletter Content
@@ -147,20 +173,32 @@ export const SchedulerStack = ({ stack, app }: StackContext): Record<string, Sta
     iamResources: [
       newslettersTable.cdk.table.tableArn,
       `${newslettersTable.cdk.table.tableArn}/*`
-    ]
-  }).addCatch(publishErrorState)
+    ],
+    resultPath: '$.body'
+  })
 
   /**
    * Send Emails
    */
   const sendEmailState = new LambdaInvoke(stack, 'SendEmailState', {
     lambdaFunction: sendEmailFunction
-  }).addCatch(publishErrorState)
+  })
+
+  const sendTestEmailBranch = Chain
+    .start(getNewsletterContentTestStateSDK)
+    .next(sendTestEmailState)
+
+  const sendEmailBranch = Chain
+    .start(waitState)
+    .next(updateNewsletterContentStateSDK)
+    .next(getNewsletterContentStateSDK)
+    .next(sendEmailState)
 
   /**
    * Chaining all step toghether
    */
-  const emailStateMachineDefinition = Chain.start(sendTestEmailState).next(waitState).next(updateNewsletterContentStateSDK).next(getNewsletterContentStateSDK).next(sendEmailState).next(succeedState)
+  const emailStateMachineDefinition = Chain
+    .start(parallel.branch(sendTestEmailBranch).branch(sendEmailBranch)).next(succeedState)
 
   /**
    * Lambda function proper role
