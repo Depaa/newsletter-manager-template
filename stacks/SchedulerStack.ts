@@ -1,7 +1,6 @@
 import { PolicyStatement, Role, ServicePrincipal } from 'aws-cdk-lib/aws-iam'
 import { LogGroup } from 'aws-cdk-lib/aws-logs'
-import { Chain, Choice, Condition, DefinitionBody, Fail, LogLevel, Parallel, StateMachine, StateMachineType, Succeed, TaskInput, Wait, WaitTime } from 'aws-cdk-lib/aws-stepfunctions'
-import { CallAwsService, LambdaInvoke, SnsPublish } from 'aws-cdk-lib/aws-stepfunctions-tasks'
+import { DefinitionBody, LogLevel, StateMachine, StateMachineType } from 'aws-cdk-lib/aws-stepfunctions'
 import { Function, attachPermissionsToRole, use, type StackContext } from 'sst/constructs'
 import { AlertingStack } from './AlertingStack'
 import { DatabaseStack } from './DatabaseStack'
@@ -12,19 +11,6 @@ export const SchedulerStack = ({ stack, app }: StackContext): Record<string, Sta
     newsletterSubscribersTable
   } = use(DatabaseStack)
   const { alertingTopic } = use(AlertingStack)
-
-  /**
-   * Add default states:
-   * Fail
-   * Success
-   * SnsPublish for Failure notification
-   */
-  const failState = new Fail(stack, 'FailState')
-  const succeedState = new Succeed(stack, 'SucceedState')
-  const publishErrorState = new SnsPublish(stack, 'PublishErrorState', {
-    topic: alertingTopic,
-    message: TaskInput.fromJsonPathAt('$')
-  }).next(failState)
 
   /**
    * Lambda function proper role
@@ -69,7 +55,6 @@ export const SchedulerStack = ({ stack, app }: StackContext): Record<string, Sta
     newslettersTableAccess,
     newsletterSubscribersTableAccess
   ])
-
   /**
    * Lambda function sending emails
    */
@@ -85,120 +70,138 @@ export const SchedulerStack = ({ stack, app }: StackContext): Record<string, Sta
     bind: [newslettersTable, newsletterSubscribersTable]
   })
 
-  /**
-   * Get Newsletter Test Content
-   */
-  const getNewsletterContentTestStateSDK = new CallAwsService(stack, 'GetNewsletterContentTestStateSDK', {
-    service: 'dynamodb',
-    action: 'getItem',
-    parameters: {
-      TableName: newslettersTable.cdk.table.tableName,
-      Key: {
-        id: {
-          'S.$': '$.id'
+  const sfnDefinition = {
+    StartAt: 'ParallelState',
+    States: {
+      ParallelState: {
+        Type: 'Parallel',
+        Next: 'SucceedState',
+        Catch: [
+          {
+            ErrorEquals: [
+              'States.ALL'
+            ],
+            Next: 'PublishErrorState'
+          }
+        ],
+        Branches: [
+          {
+            StartAt: 'GetNewsletterContentTestStateSDK',
+            States: {
+              GetNewsletterContentTestStateSDK: {
+                Next: 'SendTestEmailState',
+                Type: 'Task',
+                ResultPath: '$.body',
+                Resource: 'arn:aws:states:::aws-sdk:dynamodb:getItem',
+                Parameters: {
+                  TableName: `${newslettersTable.tableName}`,
+                  Key: {
+                    id: {
+                      'S.$': '$.id'
+                    }
+                  }
+                }
+              },
+              SendTestEmailState: {
+                End: true,
+                Retry: [
+                  {
+                    ErrorEquals: [
+                      'Lambda.ClientExecutionTimeoutException',
+                      'Lambda.ServiceException',
+                      'Lambda.AWSLambdaException',
+                      'Lambda.SdkClientException'
+                    ],
+                    IntervalSeconds: 2,
+                    MaxAttempts: 6,
+                    BackoffRate: 2
+                  }
+                ],
+                Type: 'Task',
+                ResultPath: '$.sent',
+                Resource: 'arn:aws:states:::lambda:invoke',
+                Parameters: {
+                  FunctionName: `${sendEmailFunction.functionArn}`,
+                  'Payload.$': '$'
+                }
+              }
+            }
+          },
+          {
+            StartAt: 'WaitState',
+            States: {
+              WaitState: {
+                Type: 'Wait',
+                TimestampPath: '$.waitTimestamp',
+                Next: 'UpdateNewsletterContentStateSDK'
+              },
+              UpdateNewsletterContentStateSDK: {
+                Next: 'GetNewsletterContentStateSDK',
+                Type: 'Task',
+                ResultPath: '$.updateResult',
+                Resource: 'arn:aws:states:::aws-sdk:dynamodb:updateItem',
+                Parameters: {
+                  TableName: `${newslettersTable.tableName}`,
+                  Key: {
+                    id: {
+                      'S.$': '$.id'
+                    }
+                  },
+                  ExpressionAttributeValues: {
+                    ':status': {
+                      S: 'PUBLIC'
+                    }
+                  },
+                  ExpressionAttributeNames: {
+                    '#status': 'status'
+                  },
+                  UpdateExpression: 'SET #status = :status'
+                }
+              },
+              GetNewsletterContentStateSDK: {
+                Next: 'SendEmailState',
+                Type: 'Task',
+                ResultPath: '$.body',
+                Resource: 'arn:aws:states:::aws-sdk:dynamodb:getItem',
+                Parameters: {
+                  TableName: `${newslettersTable.tableName}`,
+                  Key: {
+                    id: {
+                      'S.$': '$.id'
+                    }
+                  }
+                }
+              },
+              SendEmailState: {
+                End: true,
+                Type: 'Task',
+                Resource: 'arn:aws:states:::lambda:invoke',
+                Parameters: {
+                  FunctionName: `${sendEmailFunction.functionArn}`,
+                  'Payload.$': '$'
+                }
+              }
+            }
+          }
+        ]
+      },
+      SucceedState: {
+        Type: 'Succeed'
+      },
+      PublishErrorState: {
+        Next: 'FailState',
+        Type: 'Task',
+        Resource: 'arn:aws:states:::sns:publish',
+        Parameters: {
+          TopicArn: `${alertingTopic.topicArn}`,
+          'Message.$': '$'
         }
+      },
+      FailState: {
+        Type: 'Fail'
       }
-    },
-    iamResources: [
-      newslettersTable.cdk.table.tableArn,
-        `${newslettersTable.cdk.table.tableArn}/*`
-    ],
-    resultPath: '$.body'
-  })
-
-  /**
-   * Send Test Email
-   */
-  const sendTestEmailState = new LambdaInvoke(stack, 'SendTestEmailState', {
-    lambdaFunction: sendEmailFunction,
-    resultPath: '$.sent'
-  })
-
-  /**
-   * Create Parallel State
-   */
-  const parallel = new Parallel(stack, 'ParallelState').addCatch(publishErrorState)
-
-  /**
-   * Wait publishAt timestamp
-   */
-  const waitState = new Wait(stack, 'WaitState', {
-    time: WaitTime.timestampPath('$.waitTimestamp')
-  })
-
-  /**
-   * Update Newsletter Status
-   */
-  const updateNewsletterContentStateSDK = new CallAwsService(stack, 'UpdateNewsletterContentStateSDK', {
-    service: 'dynamodb',
-    action: 'updateItem',
-    parameters: {
-      TableName: newslettersTable.cdk.table.tableName,
-      Key: {
-        id: {
-          'S.$': '$.id'
-        }
-      },
-      ExpressionAttributeValues: {
-        ':status': {
-          S: 'PUBLIC'
-        }
-      },
-      ExpressionAttributeNames: {
-        '#status': 'status'
-      },
-      UpdateExpression: 'SET #status = :status'
-    },
-    iamResources: [
-      newslettersTable.cdk.table.tableArn,
-      `${newslettersTable.cdk.table.tableArn}/*`
-    ],
-    resultPath: '$.updateResult'
-  })
-
-  /**
-   * Get Newsletter Content
-   */
-  const getNewsletterContentStateSDK = new CallAwsService(stack, 'GetNewsletterContentStateSDK', {
-    service: 'dynamodb',
-    action: 'getItem',
-    parameters: {
-      TableName: newslettersTable.cdk.table.tableName,
-      Key: {
-        id: {
-          'S.$': '$.id'
-        }
-      }
-    },
-    iamResources: [
-      newslettersTable.cdk.table.tableArn,
-      `${newslettersTable.cdk.table.tableArn}/*`
-    ],
-    resultPath: '$.body'
-  })
-
-  /**
-   * Send Emails
-   */
-  const sendEmailState = new LambdaInvoke(stack, 'SendEmailState', {
-    lambdaFunction: sendEmailFunction
-  })
-
-  const sendTestEmailBranch = Chain
-    .start(getNewsletterContentTestStateSDK)
-    .next(sendTestEmailState)
-
-  const sendEmailBranch = Chain
-    .start(waitState)
-    .next(updateNewsletterContentStateSDK)
-    .next(getNewsletterContentStateSDK)
-    .next(sendEmailState)
-
-  /**
-   * Chaining all step toghether
-   */
-  const emailStateMachineDefinition = Chain
-    .start(parallel.branch(sendTestEmailBranch).branch(sendEmailBranch)).next(succeedState)
+    }
+  }
 
   /**
    * Lambda function proper role
@@ -257,7 +260,7 @@ export const SchedulerStack = ({ stack, app }: StackContext): Record<string, Sta
   ])
 
   const emailStateMachine = new StateMachine(stack, 'EmailStateMachine', {
-    definitionBody: DefinitionBody.fromChainable(emailStateMachineDefinition),
+    definitionBody: DefinitionBody.fromString(JSON.stringify(sfnDefinition)),
     stateMachineType: StateMachineType.STANDARD,
     role: sfnRole,
     logs: {
