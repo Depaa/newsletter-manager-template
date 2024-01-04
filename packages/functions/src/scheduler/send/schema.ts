@@ -1,15 +1,37 @@
-export const queryStringParametersSchema = {
+const dynamodbStringType = {
   type: 'object',
   properties: {
-    limit: { type: 'number' },
-    nextToken: { type: 'string', maxLength: 100 }
+    S: { type: 'string' }
   },
+  required: ['S'],
+  additionalProperties: false
+} as const
+
+const newsletterSchema = {
+  type: 'object',
+  properties: {
+    id: dynamodbStringType,
+    title: dynamodbStringType,
+    description: dynamodbStringType,
+    image: dynamodbStringType,
+    content: dynamodbStringType
+  },
+  required: ['id', 'title', 'description', 'content', 'image']
+} as const
+
+export const bodySchema = {
+  type: 'object',
+  properties: {
+    Item: newsletterSchema
+  },
+  required: ['Item'],
   additionalProperties: false
 } as const
 
 export const schema = {
   type: 'object',
   properties: {
-    queryStringParameters: queryStringParametersSchema
-  }
+    body: bodySchema
+  },
+  required: ['body']
 } as const

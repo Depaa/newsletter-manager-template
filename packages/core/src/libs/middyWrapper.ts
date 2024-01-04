@@ -4,6 +4,7 @@ import httpErrorHandlerMiddleware from '@middy/http-error-handler'
 import httpUrlencodePathParametersParserMiddleware from '@middy/http-urlencode-path-parser'
 import httpSecurityHeadersMiddleware from '@middy/http-security-headers'
 import httpHeaderNormalizerMiddleware from '@middy/http-header-normalizer'
+import httpRouterMiddleware from '@middy/http-router'
 import httpCorsMiddleware from '@middy/http-cors'
 import httpEventNormalizerMiddleware from '@middy/http-event-normalizer'
 import httpJsonBodyParserMiddleware from '@middy/http-json-body-parser'
@@ -19,6 +20,7 @@ import inputOutputLogger from '@middy/input-output-logger'
 // queryStringParameters and multiValueQueryStringParameters is non-nullable as we use http-event-normalizer
 export interface Event<TBody, TPathParameters, TQueryStringParameters>
   extends Omit<APIGatewayProxyEvent, 'body' | 'pathParameters' | 'queryStringParameters'> {
+  waitTimestamp: string | number | Date
   body: TBody
   pathParameters: TPathParameters
   queryStringParameters: TQueryStringParameters

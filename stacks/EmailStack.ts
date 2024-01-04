@@ -1,6 +1,6 @@
 import { PolicyStatement, Role, ServicePrincipal } from 'aws-cdk-lib/aws-iam'
 import { HostedZone } from 'aws-cdk-lib/aws-route53'
-import { ConfigurationSet, ConfigurationSetTlsPolicy, EmailIdentity, EmailSendingEvent, EventDestination, Identity, VdmAttributes } from 'aws-cdk-lib/aws-ses'
+import { CfnTemplate, ConfigurationSet, ConfigurationSetTlsPolicy, EmailIdentity, EmailSendingEvent, EventDestination, Identity, VdmAttributes } from 'aws-cdk-lib/aws-ses'
 import { DnsValidatedDomainIdentity } from 'aws-cdk-ses-domain-identity'
 import { Topic, attachPermissionsToRole, use, type StackContext } from 'sst/constructs'
 import { DatabaseStack } from './DatabaseStack'
@@ -153,11 +153,22 @@ export const EmailStack = ({ stack, app }: StackContext): Record<string, string>
     })
   }
 
+  /**
+   * SES Email Template
+   */
+  const sesTemplate = new CfnTemplate(stack, 'SESEmailTemplate', {
+    template: {
+      subjectPart: '{{subject}}',
+      htmlPart: '{{htmlbody}}'
+    }
+  })
+
   // https://docs.aws.amazon.com/cdk/api/v2/docs/aws-cdk-lib.aws_ses-readme.html#virtual-deliverability-manager-vdm
   // eslint-disable-next-line no-new
   new VdmAttributes(stack, 'VdmTracking')
 
   return {
-    identityName
+    identityName,
+    sesTemplate: sesTemplate.getAtt('arn').toString()
   }
 }

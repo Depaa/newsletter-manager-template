@@ -27,6 +27,7 @@
   },
   "dependencies": {
     "@aws-sdk/client-dynamodb": "^3.474.0",
+    "@aws-sdk/client-ses": "^3.481.0",
     "@aws-sdk/client-sfn": "^3.481.0",
     "@aws-sdk/lib-dynamodb": "^3.474.0",
     "@middy/core": "^5.1.0",
@@ -37,6 +38,7 @@
     "@middy/http-header-normalizer": "^5.1.0",
     "@middy/http-json-body-parser": "^5.1.0",
     "@middy/http-response-serializer": "^5.1.0",
+    "@middy/http-router": "^5.1.0",
     "@middy/http-security-headers": "^5.1.0",
     "@middy/http-urlencode-path-parser": "^5.1.0",
     "@middy/input-output-logger": "^5.1.0",

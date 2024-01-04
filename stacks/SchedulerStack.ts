@@ -4,6 +4,7 @@ import { DefinitionBody, LogLevel, StateMachine, StateMachineType } from 'aws-cd
 import { Function, attachPermissionsToRole, use, type StackContext } from 'sst/constructs'
 import { AlertingStack } from './AlertingStack'
 import { DatabaseStack } from './DatabaseStack'
+import { EmailStack } from './EmailStack'
 
 export const SchedulerStack = ({ stack, app }: StackContext): Record<string, StateMachine> => {
   const {
@@ -11,6 +12,7 @@ export const SchedulerStack = ({ stack, app }: StackContext): Record<string, Sta
     newsletterSubscribersTable
   } = use(DatabaseStack)
   const { alertingTopic } = use(AlertingStack)
+  const { sesTemplate, identityName } = use(EmailStack)
 
   /**
    * Lambda function proper role
@@ -43,6 +45,13 @@ export const SchedulerStack = ({ stack, app }: StackContext): Record<string, Sta
       `${newsletterSubscribersTable.tableArn}/*`
     ]
   })
+  const sendEmamilPolicy = new PolicyStatement({
+    actions: [
+      'ses:SendEmail',
+      'ses:SendBulkEmail'
+    ],
+    resources: ['*']
+  })
   const emailRole = new Role(stack, 'SendEmailRole', {
     assumedBy: new ServicePrincipal('lambda.amazonaws.com'),
     managedPolicies: [
@@ -53,7 +62,8 @@ export const SchedulerStack = ({ stack, app }: StackContext): Record<string, Sta
   })
   attachPermissionsToRole(emailRole, [
     newslettersTableAccess,
-    newsletterSubscribersTableAccess
+    newsletterSubscribersTableAccess,
+    sendEmamilPolicy
   ])
   /**
    * Lambda function sending emails
@@ -62,12 +72,13 @@ export const SchedulerStack = ({ stack, app }: StackContext): Record<string, Sta
     handler: 'packages/functions/src/scheduler/send/index.handler',
     functionName: `${stack.stackName}-emails-send`,
     role: emailRole,
+    timeout: '300 seconds',
     environment: {
       NEWSLETTERS_TABLE_NAME: newslettersTable.tableName,
-      NEWSLETTER_SUBSCRIBERS_TABLE_NAME: newsletterSubscribersTable.tableName
-    },
-    timeout: '300 seconds',
-    bind: [newslettersTable, newsletterSubscribersTable]
+      NEWSLETTER_SUBSCRIBERS_TABLE_NAME: newsletterSubscribersTable.tableName,
+      TEST_EMAIL_ADDRESS: process.env.TEST_EMAIL_ADDRESS ?? '',
+      SOURCE_EMAIL_ADDRESS: process.env.SOURCE_EMAIL_ADDRESS ?? ''
+    }
   })
 
   const sfnDefinition = {
@@ -89,7 +100,7 @@ export const SchedulerStack = ({ stack, app }: StackContext): Record<string, Sta
             StartAt: 'GetNewsletterContentTestStateSDK',
             States: {
               GetNewsletterContentTestStateSDK: {
-                Next: 'SendTestEmailState',
+                Next: 'Is Get Successful',
                 Type: 'Task',
                 ResultPath: '$.body',
                 Resource: 'arn:aws:states:::aws-sdk:dynamodb:getItem',
@@ -102,84 +113,258 @@ export const SchedulerStack = ({ stack, app }: StackContext): Record<string, Sta
                   }
                 }
               },
-              SendTestEmailState: {
-                End: true,
-                Retry: [
+              'Is Get Successful': {
+                Type: 'Choice',
+                Choices: [
                   {
-                    ErrorEquals: [
-                      'Lambda.ClientExecutionTimeoutException',
-                      'Lambda.ServiceException',
-                      'Lambda.AWSLambdaException',
-                      'Lambda.SdkClientException'
-                    ],
-                    IntervalSeconds: 2,
-                    MaxAttempts: 6,
-                    BackoffRate: 2
+                    Variable: '$.body.Item',
+                    IsPresent: true,
+                    Next: 'Pass'
                   }
-                ],
-                Type: 'Task',
-                ResultPath: '$.sent',
-                Resource: 'arn:aws:states:::lambda:invoke',
+                ]
+              },
+              Pass: {
+                Type: 'Pass',
+                Next: 'SendBulkEmail',
                 Parameters: {
-                  FunctionName: `${sendEmailFunction.functionArn}`,
-                  'Payload.$': '$'
+                  'id.$': '$.id',
+                  'waitTimestamp.$': '$.waitTimestamp',
+                  templateData: {
+                    'subject.$': '$.body.Item.title.S',
+                    'htmlBody.$': '$.body.Item.content.S'
+                  }
                 }
+              },
+              SendBulkEmail: {
+                Type: 'Task',
+                Parameters: {
+                  BulkEmailEntries: [
+                    {
+                      Destination: {
+                        ToAddresses: [
+                          process.env.TEST_EMAIL_ADDRESS
+                        ]
+                      }
+                    }
+                  ],
+                  DefaultContent: {
+                    Template: {
+                      'TemplateData.$': 'States.JsonToString($.templateData)',
+                      TemplateName: 'SESEmailTemplate-nW7vxKqp4dSk'
+                    }
+                  },
+                  FromEmailAddress: process.env.SOURCE_EMAIL_ADDRESS,
+                  FromEmailAddressIdentityArn: `${identityName}`,
+                  ReplyToAddresses: [
+                    process.env.REPLY_TO_ADDRESS
+                  ]
+                },
+                Resource: 'arn:aws:states:::aws-sdk:sesv2:sendBulkEmail',
+                Next: 'TestSuccessState'
+              },
+              TestSuccessState: {
+                Type: 'Succeed'
               }
             }
           },
           {
-            StartAt: 'WaitState',
+            StartAt: 'Wait scheduled date',
             States: {
-              WaitState: {
+              'Wait scheduled date': {
                 Type: 'Wait',
-                TimestampPath: '$.waitTimestamp',
-                Next: 'UpdateNewsletterContentStateSDK'
+                Next: 'Parallel',
+                TimestampPath: '$.waitTimestamp'
               },
-              UpdateNewsletterContentStateSDK: {
-                Next: 'GetNewsletterContentStateSDK',
-                Type: 'Task',
-                ResultPath: '$.updateResult',
-                Resource: 'arn:aws:states:::aws-sdk:dynamodb:updateItem',
-                Parameters: {
-                  TableName: `${newslettersTable.tableName}`,
-                  Key: {
-                    id: {
-                      'S.$': '$.id'
+              Parallel: {
+                Type: 'Parallel',
+                Next: 'Batching email list',
+                Branches: [
+                  {
+                    StartAt: 'Change Newsletter Status',
+                    States: {
+                      'Change Newsletter Status': {
+                        Type: 'Task',
+                        Resource: 'arn:aws:states:::dynamodb:updateItem',
+                        Parameters: {
+                          TableName: `${newslettersTable.tableName}`,
+                          Key: {
+                            id: {
+                              'S.$': '$.id'
+                            }
+                          },
+                          UpdateExpression: 'SET #status = :status',
+                          ExpressionAttributeValues: {
+                            ':status': {
+                              S: 'PUBLIC'
+                            }
+                          },
+                          ExpressionAttributeNames: {
+                            '#status': 'status'
+                          },
+                          ReturnValues: 'ALL_NEW'
+                        },
+                        OutputPath: '$.Attributes',
+                        End: true
+                      }
                     }
                   },
-                  ExpressionAttributeValues: {
-                    ':status': {
-                      S: 'PUBLIC'
-                    }
-                  },
-                  ExpressionAttributeNames: {
-                    '#status': 'status'
-                  },
-                  UpdateExpression: 'SET #status = :status'
-                }
-              },
-              GetNewsletterContentStateSDK: {
-                Next: 'SendEmailState',
-                Type: 'Task',
-                ResultPath: '$.body',
-                Resource: 'arn:aws:states:::aws-sdk:dynamodb:getItem',
-                Parameters: {
-                  TableName: `${newslettersTable.tableName}`,
-                  Key: {
-                    id: {
-                      'S.$': '$.id'
+                  {
+                    StartAt: 'Add initial page',
+                    States: {
+                      'Add initial page': {
+                        Type: 'Pass',
+                        Next: 'Query',
+                        Result: {
+                          LastEvaluatedKey: null,
+                          items: null
+                        },
+                        ResultPath: '$.dynamodbConfig'
+                      },
+                      Query: {
+                        Type: 'Task',
+                        Parameters: {
+                          TableName: `${newsletterSubscribersTable.tableName}`,
+                          IndexName: 'status-index',
+                          ProjectionExpression: 'email',
+                          KeyConditionExpression: ':status = #status',
+                          ExpressionAttributeNames: {
+                            '#status': 'status'
+                          },
+                          ExpressionAttributeValues: {
+                            ':status': {
+                              S: 'Subscribed'
+                            }
+                          },
+                          Limit: 3,
+                          'ExclusiveStartKey.$': '$.dynamodbConfig.LastEvaluatedKey'
+                        },
+                        Resource: 'arn:aws:states:::aws-sdk:dynamodb:query',
+                        Next: 'Filter dynamodb output',
+                        ResultPath: '$.subscribers'
+                      },
+                      'Filter dynamodb output': {
+                        Type: 'Pass',
+                        Next: 'Flattening email list',
+                        Parameters: {
+                          'subscribers.$': '$.subscribers',
+                          dynamodbConfig: {
+                            'LastEvaluatedKey.$': '$.dynamodbConfig.LastEvaluatedKey',
+                            'items.$': 'States.Array($.dynamodbConfig.items[*], $.subscribers.Items[*].email.S)'
+                          }
+                        }
+                      },
+                      'Flattening email list': {
+                        Type: 'Pass',
+                        Next: 'Are there more Items?',
+                        Parameters: {
+                          'subscribers.$': '$.subscribers',
+                          dynamodbConfig: {
+                            'LastEvaluatedKey.$': '$.dynamodbConfig.LastEvaluatedKey',
+                            'items.$': '$.dynamodbConfig.items[*][*]'
+                          }
+                        }
+                      },
+                      'Are there more Items?': {
+                        Type: 'Choice',
+                        Choices: [
+                          {
+                            And: [
+                              {
+                                Variable: '$.subscribers.LastEvaluatedKey',
+                                IsPresent: true
+                              },
+                              {
+                                Not: {
+                                  Variable: '$.subscribers.LastEvaluatedKey',
+                                  StringEquals: 'null'
+                                }
+                              }
+                            ],
+                            Next: 'Add next page'
+                          }
+                        ],
+                        Default: 'Filter output'
+                      },
+                      'Add next page': {
+                        Type: 'Pass',
+                        Next: 'Query',
+                        Parameters: {
+                          dynamodbConfig: {
+                            'LastEvaluatedKey.$': '$.subscribers.LastEvaluatedKey',
+                            'items.$': '$.dynamodbConfig.items'
+                          }
+                        }
+                      },
+                      'Filter output': {
+                        Type: 'Pass',
+                        End: true,
+                        Parameters: {
+                          'items.$': '$.dynamodbConfig.items'
+                        },
+                        OutputPath: '$.items'
+                      }
                     }
                   }
+                ],
+                ResultPath: '$.items'
+              },
+              'Batching email list': {
+                Type: 'Pass',
+                Next: 'Map',
+                Parameters: {
+                  batchNumber: 0,
+                  'toAddresses.$': 'States.ArrayPartition($.items[1], 3)',
+                  'toAddressLength.$': 'States.ArrayLength(States.ArrayGetItem(States.ArrayPartition($.items[1], 3), 0))',
+                  'emailBody.$': '$.items[0]'
                 }
               },
-              SendEmailState: {
-                End: true,
-                Type: 'Task',
-                Resource: 'arn:aws:states:::lambda:invoke',
-                Parameters: {
-                  FunctionName: `${sendEmailFunction.functionArn}`,
-                  'Payload.$': '$'
-                }
+              Map: {
+                Type: 'Map',
+                ItemProcessor: {
+                  ProcessorConfig: {
+                    Mode: 'INLINE'
+                  },
+                  StartAt: 'SendEmail',
+                  States: {
+                    SendEmail: {
+                      Type: 'Task',
+                      Parameters: {
+                        Destination: {
+                          'ToAddresses.$': '$.ContextValue'
+                        },
+                        FromEmailAddress: process.env.SOURCE_EMAIL_ADDRESS,
+                        FromEmailAddressIdentityArn: `${identityName}`,
+                        ReplyToAddresses: [
+                          process.env.REPLY_TO_ADDRESS
+                        ],
+                        Content: {
+                          Simple: {
+                            Body: {
+                              Html: {
+                                Charset: 'utf-8',
+                                'Data.$': '$.emailBody.content.S'
+                              }
+                            },
+                            Subject: {
+                              Charset: 'utf-8',
+                              'Data.$': '$.emailBody.title.S'
+                            }
+                          }
+                        }
+                      },
+                      Resource: 'arn:aws:states:::aws-sdk:sesv2:sendEmail',
+                      End: true
+                    }
+                  }
+                },
+                ItemsPath: '$.toAddresses',
+                ItemSelector: {
+                  'ContextIndex.$': '$$.Map.Item.Index',
+                  'ContextValue.$': '$$.Map.Item.Value',
+                  'toAddresses.$': '$.toAddresses',
+                  'emailBody.$': '$.emailBody'
+                },
+                End: true
               }
             }
           }
@@ -217,7 +402,8 @@ export const SchedulerStack = ({ stack, app }: StackContext): Record<string, Sta
     actions: ['lambda:InvokeFunction'],
     resources: [
       sendEmailFunction.functionArn,
-      `${sendEmailFunction.functionArn}:*`
+      `${sendEmailFunction.functionArn}:*`,
+      '*' // TODO
     ]
   })
   const getItemPolicy = new PolicyStatement({
@@ -252,11 +438,13 @@ export const SchedulerStack = ({ stack, app }: StackContext): Record<string, Sta
 
   attachPermissionsToRole(sfnRole, [
     newslettersTableAccess,
+    newsletterSubscribersTableAccess,
     publishToTopicPolicy,
     invokeFunctionPolicy,
     getItemPolicy,
     updateItemPolicy,
-    logGroupPolicy
+    logGroupPolicy,
+    sendEmamilPolicy
   ])
 
   const emailStateMachine = new StateMachine(stack, 'EmailStateMachine', {
