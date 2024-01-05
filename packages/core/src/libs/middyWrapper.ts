@@ -4,14 +4,13 @@ import httpErrorHandlerMiddleware from '@middy/http-error-handler'
 import httpUrlencodePathParametersParserMiddleware from '@middy/http-urlencode-path-parser'
 import httpSecurityHeadersMiddleware from '@middy/http-security-headers'
 import httpHeaderNormalizerMiddleware from '@middy/http-header-normalizer'
-import httpRouterMiddleware from '@middy/http-router'
 import httpCorsMiddleware from '@middy/http-cors'
 import httpEventNormalizerMiddleware from '@middy/http-event-normalizer'
 import httpJsonBodyParserMiddleware from '@middy/http-json-body-parser'
 import httpResponseSerializerMiddleware from '@middy/http-response-serializer'
 import validatorMiddleware from '@middy/validator'
 import { transpileSchema } from '@middy/validator/transpile'
-import type { APIGatewayProxyEvent, APIGatewayProxyResult, Context, Handler as AWSHandler } from 'aws-lambda'
+import type { APIGatewayProxyEvent, APIGatewayProxyResult, Context, Handler as AWSHandler, SNSEvent } from 'aws-lambda'
 import { type Entity } from 'dynamodb-onetable'
 import { type OneField, type Paged } from 'dynamodb-onetable/dist/mjs/Model'
 import inputOutputLogger from '@middy/input-output-logger'
@@ -100,7 +99,7 @@ export const middyfy = (
     .use(httpHeaderNormalizerMiddleware())
     .use(httpUrlencodePathParametersParserMiddleware())
     .use(httpSecurityHeadersMiddleware())
-    // .use(httpCorsMiddleware()) // TODO
+    .use(httpCorsMiddleware())
     .use(httpContentEncodingMiddleware())
     .use(httpErrorHandlerMiddleware({}))
     .use(
@@ -118,6 +117,25 @@ export const middyfy = (
         defaultContentType: 'application/json'
       })
     )
+
+  return wrapper
+}
+
+export type HandlerSNS = AWSHandler<SNSEvent>
+
+export const middyfySNS = (
+  handler: HandlerSNS
+): MiddyfiedHandler<SNSEvent, Result, Error, Context> => {
+  const wrapper = middy(handler)
+    .use(inputOutputLogger({
+      logger: (request) => {
+        console.debug(JSON.stringify(request.event) ?? JSON.stringify(request.response))
+      }
+    }))
+
+  // httpResponseSerializer should come last, and httpErrorHandler second last
+  wrapper
+    .use(httpErrorHandlerMiddleware({}))
 
   return wrapper
 }

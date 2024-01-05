@@ -1,12 +1,12 @@
-import { PolicyStatement, Role, ServicePrincipal } from 'aws-cdk-lib/aws-iam'
+import { Policy, PolicyStatement, Role, ServicePrincipal } from 'aws-cdk-lib/aws-iam'
 import { LogGroup } from 'aws-cdk-lib/aws-logs'
 import { DefinitionBody, LogLevel, StateMachine, StateMachineType } from 'aws-cdk-lib/aws-stepfunctions'
-import { Function, attachPermissionsToRole, use, type StackContext } from 'sst/constructs'
+import { use, type StackContext } from 'sst/constructs'
 import { AlertingStack } from './AlertingStack'
 import { DatabaseStack } from './DatabaseStack'
 import { EmailStack } from './EmailStack'
 
-export const SchedulerStack = ({ stack, app }: StackContext): Record<string, StateMachine> => {
+export const SchedulerStack = ({ stack }: StackContext): Record<string, StateMachine> => {
   const {
     newslettersTable,
     newsletterSubscribersTable
@@ -15,77 +15,8 @@ export const SchedulerStack = ({ stack, app }: StackContext): Record<string, Sta
   const { sesTemplateName, identityName, configurationSetName } = use(EmailStack)
 
   /**
-   * Lambda function proper role
+   * Step Function definition
    */
-  const newslettersTableAccess = new PolicyStatement({
-    actions: [
-      'dynamodb:PutItem',
-      'dynamodb:DeleteItem',
-      'dynamodb:UpdateItem',
-      'dynamodb:GetItem',
-      'dynamodb:Scan',
-      'dynamodb:Query'
-    ],
-    resources: [
-      newslettersTable.tableArn,
-      `${newslettersTable.tableArn}/*`
-    ]
-  })
-  const newsletterSubscribersTableAccess = new PolicyStatement({
-    actions: [
-      'dynamodb:PutItem',
-      'dynamodb:DeleteItem',
-      'dynamodb:UpdateItem',
-      'dynamodb:GetItem',
-      'dynamodb:Scan',
-      'dynamodb:Query'
-    ],
-    resources: [
-      newsletterSubscribersTable.tableArn,
-      `${newsletterSubscribersTable.tableArn}/*`
-    ]
-  })
-  const sendEmailPolicy = new PolicyStatement({
-    actions: [
-      'ses:SendEmail',
-      'ses:SendBulkEmail',
-      'ses:SendBulkTemplatedEmail'
-    ],
-    resources: [
-      `arn:aws:ses:${stack.region}:${stack.account}:identity/*`,
-      `arn:aws:ses:${stack.region}:${stack.account}:template/${sesTemplateName}`,
-      `arn:aws:ses:${stack.region}:${stack.account}:configuration-set/${configurationSetName}`
-    ]
-  })
-  const emailRole = new Role(stack, 'SendEmailRole', {
-    assumedBy: new ServicePrincipal('lambda.amazonaws.com'),
-    managedPolicies: [
-      {
-        managedPolicyArn: 'arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole'
-      }
-    ]
-  })
-  attachPermissionsToRole(emailRole, [
-    newslettersTableAccess,
-    newsletterSubscribersTableAccess,
-    sendEmailPolicy
-  ])
-  /**
-   * Lambda function sending emails
-   */
-  const sendEmailFunction = new Function(stack, 'SendEmailFunction', {
-    handler: 'packages/functions/src/scheduler/send/index.handler',
-    functionName: `${stack.stackName}-emails-send`,
-    role: emailRole,
-    timeout: '300 seconds',
-    environment: {
-      NEWSLETTERS_TABLE_NAME: newslettersTable.tableName,
-      NEWSLETTER_SUBSCRIBERS_TABLE_NAME: newsletterSubscribersTable.tableName,
-      TEST_EMAIL_ADDRESS: process.env.TEST_EMAIL_ADDRESS ?? '',
-      SOURCE_EMAIL_ADDRESS: process.env.SOURCE_EMAIL_ADDRESS ?? ''
-    }
-  })
-
   const sfnDefinition = {
     StartAt: 'Parallel state',
     States: {
@@ -152,7 +83,8 @@ export const SchedulerStack = ({ stack, app }: StackContext): Record<string, Sta
                   FromEmailAddressIdentityArn: `arn:aws:ses:${stack.region}:${stack.account}:identity/${identityName}`,
                   ReplyToAddresses: [
                     process.env.REPLY_TO_ADDRESS
-                  ]
+                  ],
+                  ConfigurationSetName: configurationSetName
                 },
                 Resource: 'arn:aws:states:::aws-sdk:sesv2:sendBulkEmail',
                 End: true
@@ -363,7 +295,8 @@ export const SchedulerStack = ({ stack, app }: StackContext): Record<string, Sta
                         FromEmailAddressIdentityArn: `arn:aws:ses:${stack.region}:${stack.account}:identity/${identityName}`,
                         ReplyToAddresses: [
                           process.env.REPLY_TO_ADDRESS
-                        ]
+                        ],
+                        ConfigurationSetName: configurationSetName
                       },
                       Resource: 'arn:aws:states:::aws-sdk:sesv2:sendBulkEmail',
                       End: true
@@ -411,35 +344,65 @@ export const SchedulerStack = ({ stack, app }: StackContext): Record<string, Sta
   }
 
   /**
-   * Lambda function proper role
+   * Step Function proper role
    */
   const sfnRole = new Role(stack, 'SendEmailSfnRole', {
     assumedBy: new ServicePrincipal(`states.${stack.region}.amazonaws.com`)
   })
+  const emailStateMachine = new StateMachine(stack, 'EmailStateMachine', {
+    definitionBody: DefinitionBody.fromString(JSON.stringify(sfnDefinition)),
+    stateMachineType: StateMachineType.STANDARD,
+    role: sfnRole,
+    logs: {
+      includeExecutionData: true,
+      level: LogLevel.ALL,
+      destination: new LogGroup(stack, 'EmailStateMachineLogGroup')
+    }
+  })
+
+  /**
+   * Step Function policies
+   */
   const publishToTopicPolicy = new PolicyStatement({
     actions: ['sns:Publish'],
     resources: [alertingTopic.topicArn]
-  })
-  const invokeFunctionPolicy = new PolicyStatement({
-    actions: ['lambda:InvokeFunction'],
-    resources: [
-      sendEmailFunction.functionArn,
-      `${sendEmailFunction.functionArn}:*`,
-      '*' // TODO
-    ]
   })
   const getItemPolicy = new PolicyStatement({
     actions: ['dynamodb:GetItem'],
     resources: [
       newslettersTable.tableArn,
-          `${newslettersTable.tableArn}/*`
+      `${newslettersTable.tableArn}/*`
     ]
   })
-  const updateItemPolicy = new PolicyStatement({
-    actions: ['dynamodb:UpdateItem'],
+  const newslettersTableAccess = new PolicyStatement({
+    actions: [
+      'dynamodb:UpdateItem',
+      'dynamodb:GetItem'
+    ],
     resources: [
       newslettersTable.tableArn,
-          `${newslettersTable.tableArn}/*`
+      `${newslettersTable.tableArn}/*`
+    ]
+  })
+  const newsletterSubscribersTableAccess = new PolicyStatement({
+    actions: [
+      'dynamodb:Query'
+    ],
+    resources: [
+      newsletterSubscribersTable.tableArn,
+      `${newsletterSubscribersTable.tableArn}/*`
+    ]
+  })
+  const sendEmailPolicy = new PolicyStatement({
+    actions: [
+      'ses:SendEmail',
+      'ses:SendBulkEmail',
+      'ses:SendBulkTemplatedEmail'
+    ],
+    resources: [
+      `arn:aws:ses:${stack.region}:${stack.account}:identity/*`,
+      `arn:aws:ses:${stack.region}:${stack.account}:template/${sesTemplateName}`,
+      `arn:aws:ses:${stack.region}:${stack.account}:configuration-set/${configurationSetName}`
     ]
   })
   const logGroupPolicy = new PolicyStatement({
@@ -457,27 +420,29 @@ export const SchedulerStack = ({ stack, app }: StackContext): Record<string, Sta
       '*'
     ]
   })
+  const startSFExecutionPolicy = new PolicyStatement({
+    actions: [
+      'states:StartExecution'
+    ],
+    resources: [
+      emailStateMachine.stateMachineArn
+    ]
+  })
 
-  attachPermissionsToRole(sfnRole, [
-    newslettersTableAccess,
-    newsletterSubscribersTableAccess,
-    publishToTopicPolicy,
-    invokeFunctionPolicy,
-    getItemPolicy,
-    updateItemPolicy,
-    logGroupPolicy,
-    sendEmailPolicy
-  ])
-
-  const emailStateMachine = new StateMachine(stack, 'EmailStateMachine', {
-    definitionBody: DefinitionBody.fromString(JSON.stringify(sfnDefinition)),
-    stateMachineType: StateMachineType.STANDARD,
-    role: sfnRole,
-    logs: {
-      includeExecutionData: true,
-      level: LogLevel.ALL,
-      destination: new LogGroup(stack, 'EmailStateMachineLogGroup')
-    }
+  // eslint-disable-next-line no-new
+  new Policy(stack, 'SFNPolicy', {
+    statements: [
+      newslettersTableAccess,
+      newsletterSubscribersTableAccess,
+      publishToTopicPolicy,
+      getItemPolicy,
+      logGroupPolicy,
+      sendEmailPolicy,
+      startSFExecutionPolicy
+    ],
+    roles: [
+      sfnRole
+    ]
   })
 
   stack.addOutputs({

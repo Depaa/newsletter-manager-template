@@ -1,12 +1,38 @@
-import { type Handler, middyfy } from '@core/libs/middyWrapper'
+import { middyfySNS, type HandlerSNS } from '@core/libs/middyWrapper'
+import { type SNSEvent } from 'aws-lambda'
+import { SubscriptionsTableDefinition } from 'src/subscriptions/dynamodb'
+import { SubscriptionStatus } from 'src/subscriptions/interface'
+import { type SNSMessage } from '../interface'
 
-const main: Handler<void, void, void> = async (event) => {
-  console.debug(JSON.stringify(event))
+const main: HandlerSNS = async (event: SNSEvent) => {
+  const records = event.Records
 
-  return {
-    statusCode: 200,
-    body: {}
+  /**
+   * Unsubscribe each email which was bounced
+   */
+  for (const record of records) {
+    if ((record.Sns?.Message) !== '') {
+      const snsMessage = JSON.parse(record.Sns.Message) as SNSMessage
+
+      if (snsMessage.eventType === 'DeliveryDelay' && (snsMessage.deliveryDelay != null) && snsMessage.deliveryDelay.delayType === 'TransientCommunicationFailure') {
+        const email = snsMessage.deliveryDelay.delayedRecipients[0].emailAddress
+
+        const params = {
+          email,
+          deletedAt: Date.now(),
+          status: SubscriptionStatus.DISABLED
+        }
+
+        await SubscriptionsTableDefinition.update(params, {
+          returnValues: 'ALL_NEW'
+        })
+      }
+    }
   }
+
+  /**
+   * Your own logic
+   */
 }
 
-export const handler = middyfy(main)
+export const handler = middyfySNS(main)

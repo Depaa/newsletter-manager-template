@@ -7,7 +7,6 @@ import { SubscriptionStatus } from '../interface'
 
 interface SubscriptionToken {
   id: string
-  expireAt: number
 }
 
 const main: Handler<FromSchema<typeof bodySchema>, FromSchema<typeof pathParametersSchema>, void> = async (event) => {
@@ -17,14 +16,14 @@ const main: Handler<FromSchema<typeof bodySchema>, FromSchema<typeof pathParamet
     email: event.body.email
   })
 
-  if (subscription.Item == null || object.expireAt < Date.now() || subscription.Item.id !== object.id) {
+  if (subscription.Item == null || subscription.Item.id !== object.id) {
     throw new UnauthorizedError()
   }
 
   const params = {
     ...event.body,
     deletedAt: Date.now(),
-    subscription: SubscriptionStatus.DISABLED
+    status: SubscriptionStatus.DISABLED
   }
 
   await SubscriptionsTableDefinition.update(params, {

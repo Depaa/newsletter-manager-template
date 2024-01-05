@@ -1,12 +1,10 @@
-import { type Handler, middyfy } from '@core/libs/middyWrapper'
+import { type HandlerSNS, middyfySNS } from '@core/libs/middyWrapper'
+import { type SNSEvent } from 'aws-lambda'
 
-const main: Handler<void, void, void> = async (event) => {
-  console.debug(JSON.stringify(event))
-
-  return {
-    statusCode: 200,
-    body: {}
-  }
+const main: HandlerSNS = async (event: SNSEvent) => {
+  /**
+   * Your own logic
+   */
 }
 
-export const handler = middyfy(main)
+export const handler = middyfySNS(main)

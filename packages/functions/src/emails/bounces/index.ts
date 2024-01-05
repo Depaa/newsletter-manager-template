@@ -1,18 +1,38 @@
-import { type Handler, middyfy } from '@core/libs/middyWrapper'
+import { type HandlerSNS, middyfySNS } from '@core/libs/middyWrapper'
+import { SubscriptionsTableDefinition } from 'src/subscriptions/dynamodb'
+import { SubscriptionStatus } from 'src/subscriptions/interface'
+import { type SNSMessage } from '../interface'
+import { type SNSEvent } from 'aws-lambda'
 
-const main: Handler<void, void, void> = async (event) => {
-  console.debug(JSON.stringify(event))
+const main: HandlerSNS = async (event: SNSEvent) => {
+  const records = event.Records
 
   /**
-   * TODO
-   * if soft bounce, then ok
-   * if hard bounce, then remove the email from the newsletter
+   * Unsubscribe each email which was bounced
    */
+  for (const record of records) {
+    if ((record.Sns?.Message) !== '') {
+      const snsMessage = JSON.parse(record.Sns.Message) as SNSMessage
 
-  return {
-    statusCode: 200,
-    body: {}
+      if (snsMessage.eventType === 'Bounce' && (snsMessage.bounce != null) && snsMessage.bounce.bounceType === 'Permanent') {
+        const email = snsMessage.bounce.bouncedRecipients[0].emailAddress
+
+        const params = {
+          email,
+          deletedAt: Date.now(),
+          status: SubscriptionStatus.DISABLED
+        }
+
+        await SubscriptionsTableDefinition.update(params, {
+          returnValues: 'ALL_NEW'
+        })
+      }
+    }
   }
+
+  /**
+   * Your own logic
+   */
 }
 
-export const handler = middyfy(main)
+export const handler = middyfySNS(main)
