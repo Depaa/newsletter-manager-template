@@ -12,7 +12,7 @@ export const SchedulerStack = ({ stack, app }: StackContext): Record<string, Sta
     newsletterSubscribersTable
   } = use(DatabaseStack)
   const { alertingTopic } = use(AlertingStack)
-  const { sesTemplate, identityName } = use(EmailStack)
+  const { sesTemplateName, identityName, configurationSetName } = use(EmailStack)
 
   /**
    * Lambda function proper role
@@ -45,12 +45,17 @@ export const SchedulerStack = ({ stack, app }: StackContext): Record<string, Sta
       `${newsletterSubscribersTable.tableArn}/*`
     ]
   })
-  const sendEmamilPolicy = new PolicyStatement({
+  const sendEmailPolicy = new PolicyStatement({
     actions: [
       'ses:SendEmail',
-      'ses:SendBulkEmail'
+      'ses:SendBulkEmail',
+      'ses:SendBulkTemplatedEmail'
     ],
-    resources: ['*']
+    resources: [
+      `arn:aws:ses:${stack.region}:${stack.account}:identity/*`,
+      `arn:aws:ses:${stack.region}:${stack.account}:template/${sesTemplateName}`,
+      `arn:aws:ses:${stack.region}:${stack.account}:configuration-set/${configurationSetName}`
+    ]
   })
   const emailRole = new Role(stack, 'SendEmailRole', {
     assumedBy: new ServicePrincipal('lambda.amazonaws.com'),
@@ -63,7 +68,7 @@ export const SchedulerStack = ({ stack, app }: StackContext): Record<string, Sta
   attachPermissionsToRole(emailRole, [
     newslettersTableAccess,
     newsletterSubscribersTableAccess,
-    sendEmamilPolicy
+    sendEmailPolicy
   ])
   /**
    * Lambda function sending emails
@@ -82,25 +87,25 @@ export const SchedulerStack = ({ stack, app }: StackContext): Record<string, Sta
   })
 
   const sfnDefinition = {
-    StartAt: 'ParallelState',
+    StartAt: 'Parallel state',
     States: {
-      ParallelState: {
+      'Parallel state': {
         Type: 'Parallel',
-        Next: 'SucceedState',
+        Next: 'Publish success recap state',
         Catch: [
           {
             ErrorEquals: [
               'States.ALL'
             ],
-            Next: 'PublishErrorState'
+            Next: 'Publish error state'
           }
         ],
         Branches: [
           {
-            StartAt: 'GetNewsletterContentTestStateSDK',
+            StartAt: 'Get newsletter content',
             States: {
-              GetNewsletterContentTestStateSDK: {
-                Next: 'Is Get Successful',
+              'Get newsletter content': {
+                Next: 'Compute parameters for test',
                 Type: 'Task',
                 ResultPath: '$.body',
                 Resource: 'arn:aws:states:::aws-sdk:dynamodb:getItem',
@@ -113,29 +118,19 @@ export const SchedulerStack = ({ stack, app }: StackContext): Record<string, Sta
                   }
                 }
               },
-              'Is Get Successful': {
-                Type: 'Choice',
-                Choices: [
-                  {
-                    Variable: '$.body.Item',
-                    IsPresent: true,
-                    Next: 'Pass'
-                  }
-                ]
-              },
-              Pass: {
+              'Compute parameters for test': {
                 Type: 'Pass',
-                Next: 'SendBulkEmail',
+                Next: 'Send test email',
                 Parameters: {
                   'id.$': '$.id',
                   'waitTimestamp.$': '$.waitTimestamp',
                   templateData: {
                     'subject.$': '$.body.Item.title.S',
-                    'htmlBody.$': '$.body.Item.content.S'
+                    'body.$': '$.body.Item.content.S'
                   }
                 }
               },
-              SendBulkEmail: {
+              'Send test email': {
                 Type: 'Task',
                 Parameters: {
                   BulkEmailEntries: [
@@ -150,20 +145,17 @@ export const SchedulerStack = ({ stack, app }: StackContext): Record<string, Sta
                   DefaultContent: {
                     Template: {
                       'TemplateData.$': 'States.JsonToString($.templateData)',
-                      TemplateName: 'SESEmailTemplate-nW7vxKqp4dSk'
+                      TemplateName: sesTemplateName
                     }
                   },
                   FromEmailAddress: process.env.SOURCE_EMAIL_ADDRESS,
-                  FromEmailAddressIdentityArn: `${identityName}`,
+                  FromEmailAddressIdentityArn: `arn:aws:ses:${stack.region}:${stack.account}:identity/${identityName}`,
                   ReplyToAddresses: [
                     process.env.REPLY_TO_ADDRESS
                   ]
                 },
                 Resource: 'arn:aws:states:::aws-sdk:sesv2:sendBulkEmail',
-                Next: 'TestSuccessState'
-              },
-              TestSuccessState: {
-                Type: 'Succeed'
+                End: true
               }
             }
           },
@@ -177,12 +169,12 @@ export const SchedulerStack = ({ stack, app }: StackContext): Record<string, Sta
               },
               Parallel: {
                 Type: 'Parallel',
-                Next: 'Batching email list',
+                Next: 'Map',
                 Branches: [
                   {
-                    StartAt: 'Change Newsletter Status',
+                    StartAt: 'Change newsletter status',
                     States: {
-                      'Change Newsletter Status': {
+                      'Change newsletter status': {
                         Type: 'Task',
                         Resource: 'arn:aws:states:::dynamodb:updateItem',
                         Parameters: {
@@ -213,14 +205,14 @@ export const SchedulerStack = ({ stack, app }: StackContext): Record<string, Sta
                     States: {
                       'Add initial page': {
                         Type: 'Pass',
-                        Next: 'Query',
+                        Next: 'Query subscribers',
                         Result: {
                           LastEvaluatedKey: null,
                           items: null
                         },
                         ResultPath: '$.dynamodbConfig'
                       },
-                      Query: {
+                      'Query subscribers': {
                         Type: 'Task',
                         Parameters: {
                           TableName: `${newsletterSubscribersTable.tableName}`,
@@ -287,7 +279,7 @@ export const SchedulerStack = ({ stack, app }: StackContext): Record<string, Sta
                       },
                       'Add next page': {
                         Type: 'Pass',
-                        Next: 'Query',
+                        Next: 'Query subscribers',
                         Parameters: {
                           dynamodbConfig: {
                             'LastEvaluatedKey.$': '$.subscribers.LastEvaluatedKey',
@@ -308,61 +300,82 @@ export const SchedulerStack = ({ stack, app }: StackContext): Record<string, Sta
                 ],
                 ResultPath: '$.items'
               },
-              'Batching email list': {
-                Type: 'Pass',
-                Next: 'Map',
-                Parameters: {
-                  batchNumber: 0,
-                  'toAddresses.$': 'States.ArrayPartition($.items[1], 3)',
-                  'toAddressLength.$': 'States.ArrayLength(States.ArrayGetItem(States.ArrayPartition($.items[1], 3), 0))',
-                  'emailBody.$': '$.items[0]'
+              Map: {
+                Type: 'Map',
+                ItemProcessor: {
+                  ProcessorConfig: {
+                    Mode: 'DISTRIBUTED',
+                    ExecutionType: 'STANDARD'
+                  },
+                  StartAt: 'Compute to bulk destinations',
+                  States: {
+                    'Compute to bulk destinations': {
+                      Type: 'Pass',
+                      Parameters: {
+                        Destination: {
+                          'ToAddresses.$': 'States.Array($.ContextValue)'
+                        }
+                      },
+                      End: true
+                    }
+                  }
+                },
+                Next: 'Batching email list',
+                ItemsPath: '$.items[1]',
+                Label: 'Map',
+                MaxConcurrency: 1000,
+                ResultPath: '$.toAddressDestinations',
+                ItemSelector: {
+                  'ContextIndex.$': '$$.Map.Item.Index',
+                  'ContextValue.$': '$$.Map.Item.Value'
                 }
               },
-              Map: {
+              'Batching email list': {
+                Type: 'Pass',
+                Next: 'Send emails map',
+                Parameters: {
+                  'toAddressDestinations.$': 'States.ArrayPartition($.toAddressDestinations, 3)',
+                  templateData: {
+                    'subject.$': '$.items[0].title.S',
+                    'body.$': '$.items[0].content.S'
+                  }
+                }
+              },
+              'Send emails map': {
                 Type: 'Map',
                 ItemProcessor: {
                   ProcessorConfig: {
                     Mode: 'INLINE'
                   },
-                  StartAt: 'SendEmail',
+                  StartAt: 'Send emails',
                   States: {
-                    SendEmail: {
+                    'Send emails': {
                       Type: 'Task',
                       Parameters: {
-                        Destination: {
-                          'ToAddresses.$': '$.ContextValue'
+                        'BulkEmailEntries.$': '$.ContextValue',
+                        DefaultContent: {
+                          Template: {
+                            'TemplateData.$': 'States.JsonToString($.templateData)',
+                            TemplateName: 'SESEmailTemplate-nW7vxKqp4dSk'
+                          }
                         },
                         FromEmailAddress: process.env.SOURCE_EMAIL_ADDRESS,
-                        FromEmailAddressIdentityArn: `${identityName}`,
+                        FromEmailAddressIdentityArn: `arn:aws:ses:${stack.region}:${stack.account}:identity/${identityName}`,
                         ReplyToAddresses: [
                           process.env.REPLY_TO_ADDRESS
-                        ],
-                        Content: {
-                          Simple: {
-                            Body: {
-                              Html: {
-                                Charset: 'utf-8',
-                                'Data.$': '$.emailBody.content.S'
-                              }
-                            },
-                            Subject: {
-                              Charset: 'utf-8',
-                              'Data.$': '$.emailBody.title.S'
-                            }
-                          }
-                        }
+                        ]
                       },
-                      Resource: 'arn:aws:states:::aws-sdk:sesv2:sendEmail',
+                      Resource: 'arn:aws:states:::aws-sdk:sesv2:sendBulkEmail',
                       End: true
                     }
                   }
                 },
-                ItemsPath: '$.toAddresses',
+                ItemsPath: '$.toAddressDestinations',
                 ItemSelector: {
                   'ContextIndex.$': '$$.Map.Item.Index',
                   'ContextValue.$': '$$.Map.Item.Value',
-                  'toAddresses.$': '$.toAddresses',
-                  'emailBody.$': '$.emailBody'
+                  'toAddressDestinations.$': '$.toAddressDestinations',
+                  'templateData.$': '$.templateData'
                 },
                 End: true
               }
@@ -370,10 +383,19 @@ export const SchedulerStack = ({ stack, app }: StackContext): Record<string, Sta
           }
         ]
       },
+      'Publish success recap state': {
+        Next: 'SucceedState',
+        Type: 'Task',
+        Resource: 'arn:aws:states:::sns:publish',
+        Parameters: {
+          TopicArn: `${alertingTopic.topicArn}`,
+          'Message.$': '$'
+        }
+      },
       SucceedState: {
         Type: 'Succeed'
       },
-      PublishErrorState: {
+      'Publish error state': {
         Next: 'FailState',
         Type: 'Task',
         Resource: 'arn:aws:states:::sns:publish',
@@ -444,7 +466,7 @@ export const SchedulerStack = ({ stack, app }: StackContext): Record<string, Sta
     getItemPolicy,
     updateItemPolicy,
     logGroupPolicy,
-    sendEmamilPolicy
+    sendEmailPolicy
   ])
 
   const emailStateMachine = new StateMachine(stack, 'EmailStateMachine', {

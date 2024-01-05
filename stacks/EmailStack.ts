@@ -159,7 +159,7 @@ export const EmailStack = ({ stack, app }: StackContext): Record<string, string>
   const sesTemplate = new CfnTemplate(stack, 'SESEmailTemplate', {
     template: {
       subjectPart: '{{subject}}',
-      htmlPart: '{{htmlbody}}'
+      htmlPart: '{{body}}'
     }
   })
 
@@ -169,6 +169,7 @@ export const EmailStack = ({ stack, app }: StackContext): Record<string, string>
 
   return {
     identityName,
-    sesTemplate: sesTemplate.getAtt('arn').toString()
+    sesTemplateName: sesTemplate.attrId,
+    configurationSetName: configurationSet.configurationSetName
   }
 }
