@@ -1,8 +1,8 @@
-import { type HandlerSNS, middyfySNS } from '@core/libs/middyWrapper'
+import { middyfySNS, type HandlerSNS } from '@core/libs/middyWrapper'
+import { type SNSEvent } from 'aws-lambda'
 import { SubscriptionsTableDefinition } from 'src/subscriptions/dynamodb'
 import { SubscriptionStatus } from 'src/subscriptions/interface'
 import { type SNSMessage } from '../interface'
-import { type SNSEvent } from 'aws-lambda'
 
 const main: HandlerSNS = async (event: SNSEvent) => {
   const records = event.Records

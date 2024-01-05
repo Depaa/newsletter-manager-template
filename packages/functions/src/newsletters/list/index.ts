@@ -1,10 +1,10 @@
-import { type Handler, middyfy } from '@core/libs/middyWrapper'
 import { isAdmin } from '@core/libs/authorizer'
-import { schema, type queryStringParametersSchema } from './schema'
+import { middyfy, type Handler } from '@core/libs/middyWrapper'
 import type { FromSchema } from 'json-schema-to-ts'
 import { NewslettersTableDefinition } from '../dynamodb'
 import type Newsletter from '../interface'
 import { NewsletterStatus } from '../interface'
+import { schema, type queryStringParametersSchema } from './schema'
 
 const sortItems = (items: Newsletter[]): Newsletter[] => {
   return items.sort((a, b) => {
@@ -44,7 +44,7 @@ const main: Handler<void, void, FromSchema<typeof queryStringParametersSchema>> 
       startKey: (nextToken !== undefined) ? JSON.parse(Buffer.from(nextToken, 'base64').toString('utf-8')) : undefined,
       index: 'status-index',
       reverse: false,
-      attributes: ['status', 'title', 'image', 'publishedAt', 'slug', 'description', 'content', 'seo', 'authors']
+      attributes: ['status', 'subject', 'publishedAt', 'content']
     })
     console.info('Successfully listed newsletters')
     console.debug(newsletters)

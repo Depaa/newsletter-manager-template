@@ -1,20 +1,14 @@
 export interface NewsletterSeo {
-  title: string
+  subject: string
   description: string
   tags?: string[]
 }
 
 export interface Newsletter {
   id: string
-  slug: string
-  title: string
-  description: string
-  image?: string
+  subject: string
   content: string
-  contentMd: string
-  seo?: NewsletterSeo
   status: NewsletterStatus
-  authors?: string[]
   publishAt?: number
   publishedAt?: number
   sfExecutionArn?: string

@@ -1,10 +1,10 @@
-import { type Handler, middyfy } from '@core/libs/middyWrapper'
+import { isAdmin } from '@core/libs/authorizer'
 import NotFoundError from '@core/libs/errors/NotFoundError'
-import { schema, type pathParametersSchema } from './schema'
+import { middyfy, type Handler } from '@core/libs/middyWrapper'
 import type { FromSchema } from 'json-schema-to-ts'
 import { NewslettersTableDefinition } from '../dynamodb'
 import type Newsletter from '../interface'
-import { isAdmin } from '@core/libs/authorizer'
+import { schema, type pathParametersSchema } from './schema'
 
 const main: Handler<void, FromSchema<typeof pathParametersSchema>, void> = async (event) => {
   let newsletter: Newsletter | Record<string, unknown> = {}
@@ -20,7 +20,7 @@ const main: Handler<void, FromSchema<typeof pathParametersSchema>, void> = async
     const resultBySlug = await NewslettersTableDefinition.query(event.pathParameters.id, {
       limit: 1,
       index: 'slug-index',
-      attributes: ['status', 'title', 'image', 'publishedAt', 'slug', 'description', 'content', 'seo', 'authors']
+      attributes: ['status', 'subject', 'publishedAt', 'content']
     })
     console.info('Successfully get newsletters with query')
     console.debug(resultBySlug)

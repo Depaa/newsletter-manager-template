@@ -56,7 +56,7 @@ export const SchedulerStack = ({ stack }: StackContext): Record<string, StateMac
                   'id.$': '$.id',
                   'waitTimestamp.$': '$.waitTimestamp',
                   templateData: {
-                    'subject.$': '$.body.Item.title.S',
+                    'subject.$': '$.body.Item.subject.S',
                     'body.$': '$.body.Item.content.S'
                   }
                 }
@@ -268,7 +268,7 @@ export const SchedulerStack = ({ stack }: StackContext): Record<string, StateMac
                 Parameters: {
                   'toAddressDestinations.$': 'States.ArrayPartition($.toAddressDestinations, 3)',
                   templateData: {
-                    'subject.$': '$.items[0].title.S',
+                    'subject.$': '$.items[0].subject.S',
                     'body.$': '$.items[0].content.S'
                   }
                 }

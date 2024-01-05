@@ -1,12 +1,13 @@
-import { type Handler, middyfy } from '@core/libs/middyWrapper'
 import UnauthorizedError from '@core/libs/errors/UnauthorizedError'
-import { schema, type bodySchema, type pathParametersSchema } from './schema'
+import { middyfy, type Handler } from '@core/libs/middyWrapper'
 import type { FromSchema } from 'json-schema-to-ts'
 import { SubscriptionsTableDefinition } from '../dynamodb'
 import { SubscriptionStatus } from '../interface'
+import { schema, type bodySchema, type pathParametersSchema } from './schema'
 
 interface SubscriptionToken {
   id: string
+  createdAt: number
 }
 
 const main: Handler<FromSchema<typeof bodySchema>, FromSchema<typeof pathParametersSchema>, void> = async (event) => {
@@ -16,7 +17,7 @@ const main: Handler<FromSchema<typeof bodySchema>, FromSchema<typeof pathParamet
     email: event.body.email
   })
 
-  if (subscription.Item == null || subscription.Item.id !== object.id) {
+  if (subscription.Item == null || subscription.Item.id !== object.id || subscription.Item.createdAt !== object.createdAt) {
     throw new UnauthorizedError()
   }
 

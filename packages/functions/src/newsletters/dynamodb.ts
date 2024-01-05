@@ -1,6 +1,6 @@
-import { Table, Entity } from 'dynamodb-toolbox'
-import { DynamoDBDocumentClient, type TranslateConfig } from '@aws-sdk/lib-dynamodb'
 import { DynamoDBClient } from '@aws-sdk/client-dynamodb'
+import { DynamoDBDocumentClient, type TranslateConfig } from '@aws-sdk/lib-dynamodb'
+import { Entity, Table } from 'dynamodb-toolbox'
 
 const marshallOptions = {
   convertEmptyValues: false
@@ -28,15 +28,9 @@ export const NewslettersTableDefinition = new Entity({
   name: 'Newsletter',
   attributes: {
     id: { partitionKey: true },
-    slug: { type: 'string', required: true },
-    title: { type: 'string', required: true },
-    description: { type: 'string', required: true },
-    image: { type: 'string' },
+    subject: { type: 'string', required: true },
     content: { type: 'string', required: true },
-    contentMd: { type: 'string', required: true },
-    seo: { type: 'map' },
     status: { type: 'string', required: true },
-    authors: { type: 'list' },
     publishAt: { type: 'number' },
     publishedAt: { type: 'number' },
     sfExecutionArn: { type: 'string' },

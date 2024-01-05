@@ -1,9 +1,9 @@
-import { type Handler, middyfy } from '@core/libs/middyWrapper'
-import { schema, type pathParametersSchema, type bodySchema } from './schema'
+import { SFNClient, StartExecutionCommand, type StartExecutionCommandInput } from '@aws-sdk/client-sfn'
+import { middyfy, type Handler } from '@core/libs/middyWrapper'
+import { randomUUID } from 'crypto'
 import type { FromSchema } from 'json-schema-to-ts'
 import { NewslettersTableDefinition } from '../dynamodb'
-import { randomUUID } from 'crypto'
-import { SFNClient, StartExecutionCommand, type StartExecutionCommandInput } from '@aws-sdk/client-sfn'
+import { schema, type bodySchema, type pathParametersSchema } from './schema'
 
 const stepfunctionsClient = new SFNClient()
 

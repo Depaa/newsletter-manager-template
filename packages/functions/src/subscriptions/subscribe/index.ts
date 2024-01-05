@@ -1,10 +1,10 @@
-import { type Handler, middyfy } from '@core/libs/middyWrapper'
-import { schema, type bodySchema } from './schema'
+import { middyfy, type Handler } from '@core/libs/middyWrapper'
+import { randomUUID } from 'crypto'
 import type { FromSchema } from 'json-schema-to-ts'
 import { SubscriptionsTableDefinition } from '../dynamodb'
 import type Subscription from '../interface'
-import { randomUUID } from 'crypto'
 import { SubscriptionStatus } from '../interface'
+import { schema, type bodySchema } from './schema'
 
 const main: Handler<FromSchema<typeof bodySchema>, void, void> = async (event) => {
   const params: Subscription = {

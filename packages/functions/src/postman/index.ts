@@ -1,4 +1,4 @@
-import { type Handler, middyfy } from '@core/libs/middyWrapper'
+import { middyfy, type Handler } from '@core/libs/middyWrapper'
 
 import collection from './NewsletterManager.postman_collection.json'
 
