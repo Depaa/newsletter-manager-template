@@ -10,7 +10,10 @@ Newsletter Backend Orchestration Template in AWS with SST
 
 1. Replace string in `.env`
     * `DOMAIN_NAME` or `EMAIL_ADDRESS`
-    * `ALERTING_EMAIL_ADDRESS`
+    * `ALERTING_EMAIL_ADDRESS`: used to receive alerting messages
+    * `SOURCE_EMAIL_ADDRESS`: from which email address you want emails to be send from
+    * `REPLY_TO_ADDRESS`: to which email address you want receive emails
+    * `TEST_EMAIL_ADDRESS`: email address that receives the test newsletter prior sending to everyone
 
 
 ---
