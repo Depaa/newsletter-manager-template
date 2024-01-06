@@ -10,19 +10,9 @@ export const bodySchema = {
   additionalProperties: false
 } as const
 
-export const pathParametersSchema = {
-  type: 'object',
-  properties: {
-    token: { type: 'string', maxLength: 512, minLength: 1 }
-  },
-  required: ['token'],
-  additionalProperties: false
-} as const
-
 export const schema = {
   type: 'object',
   properties: {
-    body: bodySchema,
-    pathParameters: pathParametersSchema
+    body: bodySchema
   }
 } as const

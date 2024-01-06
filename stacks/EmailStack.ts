@@ -4,6 +4,7 @@ import { CfnTemplate, ConfigurationSet, ConfigurationSetTlsPolicy, EmailIdentity
 import { DnsValidatedDomainIdentity } from 'aws-cdk-ses-domain-identity'
 import { Topic, attachPermissionsToRole, use, type StackContext } from 'sst/constructs'
 import { DatabaseStack } from './DatabaseStack'
+import template from '../packages/core/src/libs/templates/newsletter'
 
 export const EmailStack = ({ stack, app }: StackContext): Record<string, string> => {
   const {
@@ -159,7 +160,7 @@ export const EmailStack = ({ stack, app }: StackContext): Record<string, string>
   const sesTemplate = new CfnTemplate(stack, 'SESEmailTemplate', {
     template: {
       subjectPart: '{{subject}}',
-      htmlPart: '{{body}}'
+      htmlPart: template
     }
   })
 
