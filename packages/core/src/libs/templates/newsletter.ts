@@ -16,21 +16,21 @@ export default `<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional //EN" 
   <title></title>
   
     <style type="text/css">
-      @media only screen and (min-width: 710px) {
+      @media only screen and (min-width: 820px) {
   .u-row {
-    width: 690px !important;
+    width: 800px !important;
   }
   .u-row .u-col {
     vertical-align: top;
   }
 
   .u-row .u-col-100 {
-    width: 690px !important;
+    width: 800px !important;
   }
 
 }
 
-@media (max-width: 710px) {
+@media (max-width: 820px) {
   .u-row-container {
     max-width: 100% !important;
     padding-left: 0px !important;
@@ -100,12 +100,12 @@ table, td { color: #000000; } #u_body a { color: #ffa31a; text-decoration: under
   
   
 <div id="u_row_2" class="u-row-container v-row-padding--vertical" style="padding: 0px;background-color: transparent">
-  <div class="u-row" style="margin: 0 auto 0 0;min-width: 320px;max-width: 690px;overflow-wrap: break-word;word-wrap: break-word;word-break: break-word;background-color: #169179;">
+  <div class="u-row" style="margin: 0 auto;min-width: 320px;max-width: 800px;overflow-wrap: break-word;word-wrap: break-word;word-break: break-word;background-color: #169179;">
     <div style="border-collapse: collapse;display: table;width: 100%;height: 100%;background-color: transparent;">
-      <!--[if (mso)|(IE)]><table width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td style="padding: 0px;background-color: transparent;" align="left"><table cellpadding="0" cellspacing="0" border="0" style="width:690px;"><tr style="background-color: #169179;"><![endif]-->
+      <!--[if (mso)|(IE)]><table width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td style="padding: 0px;background-color: transparent;" align="center"><table cellpadding="0" cellspacing="0" border="0" style="width:800px;"><tr style="background-color: #169179;"><![endif]-->
       
-<!--[if (mso)|(IE)]><td align="center" width="690" class="v-col-padding" style="background-color: #ffffff;width: 690px;padding: 0px;border-top: 0px solid transparent;border-left: 0px solid transparent;border-right: 0px solid transparent;border-bottom: 0px solid transparent;" valign="top"><![endif]-->
-<div id="u_column_2" class="u-col u-col-100" style="max-width: 320px;min-width: 690px;display: table-cell;vertical-align: top;">
+<!--[if (mso)|(IE)]><td align="center" width="800" class="v-col-padding" style="background-color: #ffffff;width: 800px;padding: 0px;border-top: 0px solid transparent;border-left: 0px solid transparent;border-right: 0px solid transparent;border-bottom: 0px solid transparent;" valign="top"><![endif]-->
+<div id="u_column_2" class="u-col u-col-100" style="max-width: 320px;min-width: 800px;display: table-cell;vertical-align: top;">
   <div style="background-color: #ffffff;height: 100%;width: 100% !important;">
   <!--[if (!mso)&(!IE)]><!--><div class="v-col-padding" style="box-sizing: border-box; height: 100%; padding: 0px;border-top: 0px solid transparent;border-left: 0px solid transparent;border-right: 0px solid transparent;border-bottom: 0px solid transparent;"><!--<![endif]-->
   
@@ -118,7 +118,7 @@ table, td { color: #000000; } #u_body a { color: #ffa31a; text-decoration: under
   <tr>
     <td style="padding-right: 0px;padding-left: 0px;" align="center">
       
-      <img align="center" border="0" src="https://i.imgur.com/SKhGEDU.png" alt="Thank You" title="Thank You" style="outline: none;text-decoration: none;-ms-interpolation-mode: bicubic;clear: both;display: inline-block !important;border: none;height: auto;float: none;width: 100%;max-width: 690px;" width="690"/>
+      <img align="center" border="0" src="https://i.imgur.com/SKhGEDU.png" alt="Thank You" title="Thank You" style="outline: none;text-decoration: none;-ms-interpolation-mode: bicubic;clear: both;display: inline-block !important;border: none;height: auto;float: none;width: 100%;max-width: 800px;" width="800"/>
       
     </td>
   </tr>
@@ -157,12 +157,12 @@ table, td { color: #000000; } #u_body a { color: #ffa31a; text-decoration: under
   
   
 <div class="u-row-container v-row-padding--vertical" style="padding: 0px;background-color: transparent">
-  <div class="u-row" style="margin: 0 auto 0 0;min-width: 320px;max-width: 690px;overflow-wrap: break-word;word-wrap: break-word;word-break: break-word;background-color: transparent;">
+  <div class="u-row" style="margin: 0 auto;min-width: 320px;max-width: 800px;overflow-wrap: break-word;word-wrap: break-word;word-break: break-word;background-color: transparent;">
     <div style="border-collapse: collapse;display: table;width: 100%;height: 100%;background-color: transparent;">
-      <!--[if (mso)|(IE)]><table width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td style="padding: 0px;background-color: transparent;" align="left"><table cellpadding="0" cellspacing="0" border="0" style="width:690px;"><tr style="background-color: transparent;"><![endif]-->
+      <!--[if (mso)|(IE)]><table width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td style="padding: 0px;background-color: transparent;" align="center"><table cellpadding="0" cellspacing="0" border="0" style="width:800px;"><tr style="background-color: transparent;"><![endif]-->
       
-<!--[if (mso)|(IE)]><td align="center" width="690" class="v-col-padding" style="width: 690px;padding: 0px;border-top: 0px solid transparent;border-left: 0px solid transparent;border-right: 0px solid transparent;border-bottom: 0px solid transparent;" valign="top"><![endif]-->
-<div class="u-col u-col-100" style="max-width: 320px;min-width: 690px;display: table-cell;vertical-align: top;">
+<!--[if (mso)|(IE)]><td align="center" width="800" class="v-col-padding" style="width: 800px;padding: 0px;border-top: 0px solid transparent;border-left: 0px solid transparent;border-right: 0px solid transparent;border-bottom: 0px solid transparent;" valign="top"><![endif]-->
+<div class="u-col u-col-100" style="max-width: 320px;min-width: 800px;display: table-cell;vertical-align: top;">
   <div style="height: 100%;width: 100% !important;">
   <!--[if (!mso)&(!IE)]><!--><div class="v-col-padding" style="box-sizing: border-box; height: 100%; padding: 0px;border-top: 0px solid transparent;border-left: 0px solid transparent;border-right: 0px solid transparent;border-bottom: 0px solid transparent;"><!--<![endif]-->
   
@@ -200,12 +200,12 @@ table, td { color: #000000; } #u_body a { color: #ffa31a; text-decoration: under
   
   
 <div class="u-row-container v-row-padding--vertical" style="padding: 0px;background-color: transparent">
-  <div class="u-row" style="margin: 0 auto 0 0;min-width: 320px;max-width: 690px;overflow-wrap: break-word;word-wrap: break-word;word-break: break-word;background-color: transparent;">
+  <div class="u-row" style="margin: 0 auto;min-width: 320px;max-width: 800px;overflow-wrap: break-word;word-wrap: break-word;word-break: break-word;background-color: transparent;">
     <div style="border-collapse: collapse;display: table;width: 100%;height: 100%;background-color: transparent;">
-      <!--[if (mso)|(IE)]><table width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td style="padding: 0px;background-color: transparent;" align="left"><table cellpadding="0" cellspacing="0" border="0" style="width:690px;"><tr style="background-color: transparent;"><![endif]-->
+      <!--[if (mso)|(IE)]><table width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td style="padding: 0px;background-color: transparent;" align="center"><table cellpadding="0" cellspacing="0" border="0" style="width:800px;"><tr style="background-color: transparent;"><![endif]-->
       
-<!--[if (mso)|(IE)]><td align="center" width="690" class="v-col-padding" style="width: 690px;padding: 0px;border-top: 0px solid transparent;border-left: 0px solid transparent;border-right: 0px solid transparent;border-bottom: 0px solid transparent;" valign="top"><![endif]-->
-<div class="u-col u-col-100" style="max-width: 320px;min-width: 690px;display: table-cell;vertical-align: top;">
+<!--[if (mso)|(IE)]><td align="center" width="800" class="v-col-padding" style="width: 800px;padding: 0px;border-top: 0px solid transparent;border-left: 0px solid transparent;border-right: 0px solid transparent;border-bottom: 0px solid transparent;" valign="top"><![endif]-->
+<div class="u-col u-col-100" style="max-width: 320px;min-width: 800px;display: table-cell;vertical-align: top;">
   <div style="height: 100%;width: 100% !important;">
   <!--[if (!mso)&(!IE)]><!--><div class="v-col-padding" style="box-sizing: border-box; height: 100%; padding: 0px;border-top: 0px solid transparent;border-left: 0px solid transparent;border-right: 0px solid transparent;border-bottom: 0px solid transparent;"><!--<![endif]-->
   
@@ -273,12 +273,12 @@ table, td { color: #000000; } #u_body a { color: #ffa31a; text-decoration: under
   
   
 <div class="u-row-container v-row-padding--vertical" style="padding: 0px;background-color: transparent">
-  <div class="u-row" style="margin: 0 auto 0 0;min-width: 320px;max-width: 690px;overflow-wrap: break-word;word-wrap: break-word;word-break: break-word;background-color: transparent;">
+  <div class="u-row" style="margin: 0 auto;min-width: 320px;max-width: 800px;overflow-wrap: break-word;word-wrap: break-word;word-break: break-word;background-color: transparent;">
     <div style="border-collapse: collapse;display: table;width: 100%;height: 100%;background-color: transparent;">
-      <!--[if (mso)|(IE)]><table width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td style="padding: 0px;background-color: transparent;" align="left"><table cellpadding="0" cellspacing="0" border="0" style="width:690px;"><tr style="background-color: transparent;"><![endif]-->
+      <!--[if (mso)|(IE)]><table width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td style="padding: 0px;background-color: transparent;" align="center"><table cellpadding="0" cellspacing="0" border="0" style="width:800px;"><tr style="background-color: transparent;"><![endif]-->
       
-<!--[if (mso)|(IE)]><td align="center" width="690" class="v-col-padding" style="width: 690px;padding: 0px;border-top: 0px solid transparent;border-left: 0px solid transparent;border-right: 0px solid transparent;border-bottom: 0px solid transparent;" valign="top"><![endif]-->
-<div class="u-col u-col-100" style="max-width: 320px;min-width: 690px;display: table-cell;vertical-align: top;">
+<!--[if (mso)|(IE)]><td align="center" width="800" class="v-col-padding" style="width: 800px;padding: 0px;border-top: 0px solid transparent;border-left: 0px solid transparent;border-right: 0px solid transparent;border-bottom: 0px solid transparent;" valign="top"><![endif]-->
+<div class="u-col u-col-100" style="max-width: 320px;min-width: 800px;display: table-cell;vertical-align: top;">
   <div style="height: 100%;width: 100% !important;">
   <!--[if (!mso)&(!IE)]><!--><div class="v-col-padding" style="box-sizing: border-box; height: 100%; padding: 0px;border-top: 0px solid transparent;border-left: 0px solid transparent;border-right: 0px solid transparent;border-bottom: 0px solid transparent;"><!--<![endif]-->
   

@@ -288,7 +288,7 @@ export const SchedulerStack = ({ stack }: StackContext): Record<string, StateMac
                         DefaultContent: {
                           Template: {
                             'TemplateData.$': 'States.JsonToString($.templateData)',
-                            TemplateName: 'SESEmailTemplate-nW7vxKqp4dSk'
+                            TemplateName: `${sesTemplateName}`
                           }
                         },
                         FromEmailAddress: process.env.SOURCE_EMAIL_ADDRESS,

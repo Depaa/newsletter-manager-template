@@ -16,6 +16,11 @@ const main: Handler<FromSchema<typeof bodySchema>, void, void> = async (event) =
 
   await SubscriptionsTableDefinition.put(params)
 
+  /**
+   * TODO
+   * SES send email
+   */
+
   return {
     statusCode: 204,
     body: {}

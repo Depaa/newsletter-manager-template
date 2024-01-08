@@ -30,7 +30,7 @@ const main: Handler<void, void, FromSchema<typeof queryStringParametersSchema>> 
     if (Object.keys(event.queryStringParameters ?? {}).length === 0) {
       const newsletters = await NewslettersTableDefinition.scan({
         limit,
-        startKey: (nextToken !== undefined) ? JSON.parse(Buffer.from(nextToken, 'base64').toString('utf-8')) : undefined
+        startKey: (nextToken !== undefined && nextToken !== '') ? JSON.parse(Buffer.from(nextToken, 'base64').toString('utf-8')) : undefined
       })
       items = newsletters.Items as Newsletter[] ?? []
       if (newsletters.LastEvaluatedKey != null) {
@@ -41,7 +41,7 @@ const main: Handler<void, void, FromSchema<typeof queryStringParametersSchema>> 
   } else {
     const newsletters = await NewslettersTableDefinition.query(NewsletterStatus.PUBLIC, {
       limit,
-      startKey: (nextToken !== undefined) ? JSON.parse(Buffer.from(nextToken, 'base64').toString('utf-8')) : undefined,
+      startKey: (nextToken !== undefined && nextToken !== '') ? JSON.parse(Buffer.from(nextToken, 'base64').toString('utf-8')) : undefined,
       index: 'status-index',
       reverse: false,
       attributes: ['status', 'subject', 'publishedAt', 'content']
