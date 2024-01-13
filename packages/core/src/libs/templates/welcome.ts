@@ -89,7 +89,7 @@ a[x-apple-data-detectors='true'] {
   text-decoration: none !important;
 }
 
-table, td { color: #000000; } #u_body a { color: #ffa31a; text-decoration: underline; } @media (max-width: 480px) { #u_row_2.v-row-padding--vertical { padding-top: 0px !important; padding-bottom: 0px !important; } #u_column_2 .v-col-padding { padding: 0px !important; } #u_content_heading_7 .v-font-size { font-size: 25px !important; } #u_content_heading_7 .v-color { color: #ffffff !important; } #u_content_image_8 .v-src-width { width: auto !important; } #u_content_image_8 .v-src-max-width { max-width: 57% !important; } #u_content_heading_3 .v-text-align { text-align: center !important; } #u_content_text_3 .v-text-align { text-align: center !important; } #u_content_image_3 .v-src-width { width: auto !important; } #u_content_image_3 .v-src-max-width { max-width: 58% !important; } #u_content_heading_5 .v-text-align { text-align: center !important; } #u_content_text_5 .v-text-align { text-align: center !important; } #u_content_image_9 .v-src-width { width: auto !important; } #u_content_image_9 .v-src-max-width { max-width: 58% !important; } #u_content_heading_12 .v-text-align { text-align: center !important; } #u_content_text_12 .v-text-align { text-align: center !important; } #u_content_image_10 .v-src-width { width: auto !important; } #u_content_image_10 .v-src-max-width { max-width: 58% !important; } #u_content_heading_13 .v-text-align { text-align: center !important; } #u_content_text_13 .v-text-align { text-align: center !important; } #u_content_heading_14 .v-font-size { font-size: 25px !important; } #u_content_heading_14 .v-color { color: #ffffff !important; } }
+table, td { color: #000000; } #u_body a { color: #ffa31a; text-decoration: underline; } @media (max-width: 480px) { #u_row_2.v-row-padding--vertical { padding-top: 0px !important; padding-bottom: 0px !important; } #u_column_2 .v-col-padding { padding: 0px !important; } #u_content_heading_7 .v-font-size { font-size: 25px !important; } #u_content_heading_7 .v-color { color: #ffffff !important; } #u_content_image_8 .v-src-width { width: auto !important; } #u_content_image_8 .v-src-max-width { max-width: 57% !important; } #u_content_heading_3 .v-text-align { text-align: center !important; } #u_content_text_3 .v-text-align { text-align: center !important; } #u_content_image_3 .v-src-width { width: auto !important; } #u_content_image_3 .v-src-max-width { max-width: 58% !important; } #u_content_heading_5 .v-text-align { text-align: center !important; } #u_content_text_5 .v-text-align { text-align: center !important; } #u_content_heading_12 .v-text-align { text-align: center !important; } #u_content_text_12 .v-text-align { text-align: center !important; } #u_content_image_9 .v-src-width { width: auto !important; } #u_content_image_9 .v-src-max-width { max-width: 58% !important; } #u_content_heading_15 .v-text-align { text-align: center !important; } #u_content_text_15 .v-text-align { text-align: center !important; } #u_content_image_10 .v-src-width { width: auto !important; } #u_content_image_10 .v-src-max-width { max-width: 58% !important; } #u_content_heading_14 .v-font-size { font-size: 25px !important; } #u_content_heading_14 .v-color { color: #ffffff !important; } }
     </style>
   
   
@@ -108,9 +108,9 @@ table, td { color: #000000; } #u_body a { color: #ffa31a; text-decoration: under
   
   
 <div id="u_row_2" class="u-row-container v-row-padding--vertical" style="padding: 0px;background-color: transparent">
-  <div class="u-row" style="margin: 0 auto 0 0;min-width: 320px;max-width: 690px;overflow-wrap: break-word;word-wrap: break-word;word-break: break-word;background-color: #169179;">
+  <div class="u-row" style="margin: 0 auto;min-width: 320px;max-width: 690px;overflow-wrap: break-word;word-wrap: break-word;word-break: break-word;background-color: #169179;">
     <div style="border-collapse: collapse;display: table;width: 100%;height: 100%;background-color: transparent;">
-      <!--[if (mso)|(IE)]><table width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td style="padding: 0px;background-color: transparent;" align="left"><table cellpadding="0" cellspacing="0" border="0" style="width:690px;"><tr style="background-color: #169179;"><![endif]-->
+      <!--[if (mso)|(IE)]><table width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td style="padding: 0px;background-color: transparent;" align="center"><table cellpadding="0" cellspacing="0" border="0" style="width:690px;"><tr style="background-color: #169179;"><![endif]-->
       
 <!--[if (mso)|(IE)]><td align="center" width="690" class="v-col-padding" style="background-color: #1c1e26;width: 690px;padding: 0px;border-top: 0px solid transparent;border-left: 0px solid transparent;border-right: 0px solid transparent;border-bottom: 0px solid transparent;" valign="top"><![endif]-->
 <div id="u_column_2" class="u-col u-col-100" style="max-width: 320px;min-width: 690px;display: table-cell;vertical-align: top;">
@@ -165,9 +165,9 @@ table, td { color: #000000; } #u_body a { color: #ffa31a; text-decoration: under
   
   
 <div class="u-row-container v-row-padding--vertical" style="padding: 0px;background-color: transparent">
-  <div class="u-row" style="margin: 0 auto 0 0;min-width: 320px;max-width: 690px;overflow-wrap: break-word;word-wrap: break-word;word-break: break-word;background-color: #e9e1ce;">
+  <div class="u-row" style="margin: 0 auto;min-width: 320px;max-width: 690px;overflow-wrap: break-word;word-wrap: break-word;word-break: break-word;background-color: #e9e1ce;">
     <div style="border-collapse: collapse;display: table;width: 100%;height: 100%;background-color: transparent;">
-      <!--[if (mso)|(IE)]><table width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td style="padding: 0px;background-color: transparent;" align="left"><table cellpadding="0" cellspacing="0" border="0" style="width:690px;"><tr style="background-color: #e9e1ce;"><![endif]-->
+      <!--[if (mso)|(IE)]><table width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td style="padding: 0px;background-color: transparent;" align="center"><table cellpadding="0" cellspacing="0" border="0" style="width:690px;"><tr style="background-color: #e9e1ce;"><![endif]-->
       
 <!--[if (mso)|(IE)]><td align="center" width="690" class="v-col-padding" style="background-color: #32343e;width: 690px;padding: 0px;border-top: 0px solid transparent;border-left: 0px solid transparent;border-right: 0px solid transparent;border-bottom: 0px solid transparent;" valign="top"><![endif]-->
 <div class="u-col u-col-100" style="max-width: 320px;min-width: 690px;display: table-cell;vertical-align: top;">
@@ -202,9 +202,9 @@ table, td { color: #000000; } #u_body a { color: #ffa31a; text-decoration: under
   
   
 <div class="u-row-container v-row-padding--vertical" style="padding: 0px;background-color: transparent">
-  <div class="u-row" style="margin: 0 auto 0 0;min-width: 320px;max-width: 690px;overflow-wrap: break-word;word-wrap: break-word;word-break: break-word;background-color: #e9e1ce;">
+  <div class="u-row" style="margin: 0 auto;min-width: 320px;max-width: 690px;overflow-wrap: break-word;word-wrap: break-word;word-break: break-word;background-color: #e9e1ce;">
     <div style="border-collapse: collapse;display: table;width: 100%;height: 100%;background-color: transparent;">
-      <!--[if (mso)|(IE)]><table width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td style="padding: 0px;background-color: transparent;" align="left"><table cellpadding="0" cellspacing="0" border="0" style="width:690px;"><tr style="background-color: #e9e1ce;"><![endif]-->
+      <!--[if (mso)|(IE)]><table width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td style="padding: 0px;background-color: transparent;" align="center"><table cellpadding="0" cellspacing="0" border="0" style="width:690px;"><tr style="background-color: #e9e1ce;"><![endif]-->
       
 <!--[if (mso)|(IE)]><td align="center" width="690" class="v-col-padding" style="background-color: #32343e;width: 690px;padding: 0px;border-top: 0px solid transparent;border-left: 0px solid transparent;border-right: 0px solid transparent;border-bottom: 0px solid transparent;" valign="top"><![endif]-->
 <div class="u-col u-col-100" style="max-width: 320px;min-width: 690px;display: table-cell;vertical-align: top;">
@@ -265,14 +265,14 @@ table, td { color: #000000; } #u_body a { color: #ffa31a; text-decoration: under
   
   
 <div class="u-row-container v-row-padding--vertical" style="padding: 0px;background-color: transparent">
-  <div class="u-row" style="margin: 0 auto 0 0;min-width: 320px;max-width: 690px;overflow-wrap: break-word;word-wrap: break-word;word-break: break-word;background-color: #e9e1ce;">
+  <div class="u-row" style="margin: 0 auto;min-width: 320px;max-width: 690px;overflow-wrap: break-word;word-wrap: break-word;word-break: break-word;background-color: #e9e1ce;">
     <div style="border-collapse: collapse;display: table;width: 100%;height: 100%;background-color: transparent;">
-      <!--[if (mso)|(IE)]><table width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td style="padding: 0px;background-color: transparent;" align="left"><table cellpadding="0" cellspacing="0" border="0" style="width:690px;"><tr style="background-color: #e9e1ce;"><![endif]-->
+      <!--[if (mso)|(IE)]><table width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td style="padding: 0px;background-color: transparent;" align="center"><table cellpadding="0" cellspacing="0" border="0" style="width:690px;"><tr style="background-color: #e9e1ce;"><![endif]-->
       
-<!--[if (mso)|(IE)]><td align="center" width="230" class="v-col-padding" style="background-color: #32343e;width: 230px;padding: 0px;border-top: 0px solid transparent;border-left: 0px solid transparent;border-right: 0px solid transparent;border-bottom: 0px solid transparent;" valign="top"><![endif]-->
+<!--[if (mso)|(IE)]><td align="center" width="230" class="v-col-padding" style="background-color: #32343e;width: 230px;padding: 0px 10px 0px 0px;border-top: 0px solid transparent;border-left: 0px solid transparent;border-right: 0px solid transparent;border-bottom: 0px solid transparent;" valign="top"><![endif]-->
 <div class="u-col u-col-33p33" style="max-width: 320px;min-width: 230px;display: table-cell;vertical-align: top;">
   <div style="background-color: #32343e;height: 100%;width: 100% !important;">
-  <!--[if (!mso)&(!IE)]><!--><div class="v-col-padding" style="box-sizing: border-box; height: 100%; padding: 0px;border-top: 0px solid transparent;border-left: 0px solid transparent;border-right: 0px solid transparent;border-bottom: 0px solid transparent;"><!--<![endif]-->
+  <!--[if (!mso)&(!IE)]><!--><div class="v-col-padding" style="box-sizing: border-box; height: 100%; padding: 0px 10px 0px 0px;border-top: 0px solid transparent;border-left: 0px solid transparent;border-right: 0px solid transparent;border-bottom: 0px solid transparent;"><!--<![endif]-->
   
 <table id="u_content_image_8" style="font-family:arial,helvetica,sans-serif;" role="presentation" cellpadding="0" cellspacing="0" width="100%" border="0">
   <tbody>
@@ -283,7 +283,7 @@ table, td { color: #000000; } #u_body a { color: #ffa31a; text-decoration: under
   <tr>
     <td class="v-text-align" style="padding-right: 0px;padding-left: 0px;" align="center">
       
-      <img align="center" border="0" src="https://content.cloudnature.net/images/b634adf3-d260-4699-b198-2cc6ba576a26/092ac68e-df9e-4b7d-9a2d-012b46f6df32" alt="Image" title="Image" style="outline: none;text-decoration: none;-ms-interpolation-mode: bicubic;clear: both;display: inline-block !important;border: none;height: auto;float: none;width: 100%;max-width: 200px;" width="200" class="v-src-width v-src-max-width"/>
+      <img align="center" border="0" src="https://i.imgur.com/dfpyArg.jpg" alt="Image" title="Image" style="outline: none;text-decoration: none;-ms-interpolation-mode: bicubic;clear: both;display: inline-block !important;border: none;height: auto;float: none;width: 100%;max-width: 200px;" width="200" class="v-src-width v-src-max-width"/>
       
     </td>
   </tr>
@@ -298,10 +298,10 @@ table, td { color: #000000; } #u_body a { color: #ffa31a; text-decoration: under
   </div>
 </div>
 <!--[if (mso)|(IE)]></td><![endif]-->
-<!--[if (mso)|(IE)]><td align="center" width="460" class="v-col-padding" style="background-color: #32343e;width: 460px;padding: 0px;border-top: 0px solid transparent;border-left: 0px solid transparent;border-right: 0px solid transparent;border-bottom: 0px solid transparent;" valign="top"><![endif]-->
+<!--[if (mso)|(IE)]><td align="center" width="460" class="v-col-padding" style="background-color: #32343e;width: 460px;padding: 0px 10px 0px 0px;border-top: 0px solid transparent;border-left: 0px solid transparent;border-right: 0px solid transparent;border-bottom: 0px solid transparent;" valign="top"><![endif]-->
 <div class="u-col u-col-66p67" style="max-width: 320px;min-width: 460px;display: table-cell;vertical-align: top;">
   <div style="background-color: #32343e;height: 100%;width: 100% !important;">
-  <!--[if (!mso)&(!IE)]><!--><div class="v-col-padding" style="box-sizing: border-box; height: 100%; padding: 0px;border-top: 0px solid transparent;border-left: 0px solid transparent;border-right: 0px solid transparent;border-bottom: 0px solid transparent;"><!--<![endif]-->
+  <!--[if (!mso)&(!IE)]><!--><div class="v-col-padding" style="box-sizing: border-box; height: 100%; padding: 0px 10px 0px 0px;border-top: 0px solid transparent;border-left: 0px solid transparent;border-right: 0px solid transparent;border-bottom: 0px solid transparent;"><!--<![endif]-->
   
 <table id="u_content_heading_3" style="font-family:arial,helvetica,sans-serif;" role="presentation" cellpadding="0" cellspacing="0" width="100%" border="0">
   <tbody>
@@ -345,9 +345,9 @@ table, td { color: #000000; } #u_body a { color: #ffa31a; text-decoration: under
   
   
 <div class="u-row-container v-row-padding--vertical" style="padding: 0px;background-color: transparent">
-  <div class="u-row" style="margin: 0 auto 0 0;min-width: 320px;max-width: 690px;overflow-wrap: break-word;word-wrap: break-word;word-break: break-word;background-color: #e9e1ce;">
+  <div class="u-row" style="margin: 0 auto;min-width: 320px;max-width: 690px;overflow-wrap: break-word;word-wrap: break-word;word-break: break-word;background-color: #e9e1ce;">
     <div style="border-collapse: collapse;display: table;width: 100%;height: 100%;background-color: transparent;">
-      <!--[if (mso)|(IE)]><table width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td style="padding: 0px;background-color: transparent;" align="left"><table cellpadding="0" cellspacing="0" border="0" style="width:690px;"><tr style="background-color: #e9e1ce;"><![endif]-->
+      <!--[if (mso)|(IE)]><table width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td style="padding: 0px;background-color: transparent;" align="center"><table cellpadding="0" cellspacing="0" border="0" style="width:690px;"><tr style="background-color: #e9e1ce;"><![endif]-->
       
 <!--[if (mso)|(IE)]><td align="center" width="230" class="v-col-padding" style="background-color: #32343e;width: 230px;padding: 0px;border-top: 0px solid transparent;border-left: 0px solid transparent;border-right: 0px solid transparent;border-bottom: 0px solid transparent;" valign="top"><![endif]-->
 <div class="u-col u-col-33p33" style="max-width: 320px;min-width: 230px;display: table-cell;vertical-align: top;">
@@ -425,43 +425,14 @@ table, td { color: #000000; } #u_body a { color: #ffa31a; text-decoration: under
   
   
 <div class="u-row-container v-row-padding--vertical" style="padding: 0px;background-color: transparent">
-  <div class="u-row" style="margin: 0 auto 0 0;min-width: 320px;max-width: 690px;overflow-wrap: break-word;word-wrap: break-word;word-break: break-word;background-color: #e9e1ce;">
+  <div class="u-row" style="margin: 0 auto;min-width: 320px;max-width: 690px;overflow-wrap: break-word;word-wrap: break-word;word-break: break-word;background-color: #e9e1ce;">
     <div style="border-collapse: collapse;display: table;width: 100%;height: 100%;background-color: transparent;">
-      <!--[if (mso)|(IE)]><table width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td style="padding: 0px;background-color: transparent;" align="left"><table cellpadding="0" cellspacing="0" border="0" style="width:690px;"><tr style="background-color: #e9e1ce;"><![endif]-->
+      <!--[if (mso)|(IE)]><table width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td style="padding: 0px;background-color: transparent;" align="center"><table cellpadding="0" cellspacing="0" border="0" style="width:690px;"><tr style="background-color: #e9e1ce;"><![endif]-->
       
-<!--[if (mso)|(IE)]><td align="center" width="230" class="v-col-padding" style="background-color: #32343e;width: 230px;padding: 0px;border-top: 0px solid transparent;border-left: 0px solid transparent;border-right: 0px solid transparent;border-bottom: 0px solid transparent;" valign="top"><![endif]-->
-<div class="u-col u-col-33p33" style="max-width: 320px;min-width: 230px;display: table-cell;vertical-align: top;">
-  <div style="background-color: #32343e;height: 100%;width: 100% !important;">
-  <!--[if (!mso)&(!IE)]><!--><div class="v-col-padding" style="box-sizing: border-box; height: 100%; padding: 0px;border-top: 0px solid transparent;border-left: 0px solid transparent;border-right: 0px solid transparent;border-bottom: 0px solid transparent;"><!--<![endif]-->
-  
-<table id="u_content_image_9" style="font-family:arial,helvetica,sans-serif;" role="presentation" cellpadding="0" cellspacing="0" width="100%" border="0">
-  <tbody>
-    <tr>
-      <td style="overflow-wrap:break-word;word-break:break-word;padding:15px;font-family:arial,helvetica,sans-serif;" align="left">
-        
-<table width="100%" cellpadding="0" cellspacing="0" border="0">
-  <tr>
-    <td class="v-text-align" style="padding-right: 0px;padding-left: 0px;" align="center">
-      
-      <img align="center" border="0" src="https://content.cloudnature.net/images/c8e8638b-2b3e-4231-81d3-e6374299726b/61b67e5e-0f52-4ec9-9fea-81f1590a9c16" alt="Image" title="Image" style="outline: none;text-decoration: none;-ms-interpolation-mode: bicubic;clear: both;display: inline-block !important;border: none;height: auto;float: none;width: 100%;max-width: 200px;" width="200" class="v-src-width v-src-max-width"/>
-      
-    </td>
-  </tr>
-</table>
-
-      </td>
-    </tr>
-  </tbody>
-</table>
-
-  <!--[if (!mso)&(!IE)]><!--></div><!--<![endif]-->
-  </div>
-</div>
-<!--[if (mso)|(IE)]></td><![endif]-->
-<!--[if (mso)|(IE)]><td align="center" width="460" class="v-col-padding" style="background-color: #32343e;width: 460px;padding: 0px;border-top: 0px solid transparent;border-left: 0px solid transparent;border-right: 0px solid transparent;border-bottom: 0px solid transparent;" valign="top"><![endif]-->
+<!--[if (mso)|(IE)]><td align="center" width="460" class="v-col-padding" style="background-color: #32343e;width: 460px;padding: 0px 0px 0px 10px;border-top: 0px solid transparent;border-left: 0px solid transparent;border-right: 0px solid transparent;border-bottom: 0px solid transparent;" valign="top"><![endif]-->
 <div class="u-col u-col-66p67" style="max-width: 320px;min-width: 460px;display: table-cell;vertical-align: top;">
   <div style="background-color: #32343e;height: 100%;width: 100% !important;">
-  <!--[if (!mso)&(!IE)]><!--><div class="v-col-padding" style="box-sizing: border-box; height: 100%; padding: 0px;border-top: 0px solid transparent;border-left: 0px solid transparent;border-right: 0px solid transparent;border-bottom: 0px solid transparent;"><!--<![endif]-->
+  <!--[if (!mso)&(!IE)]><!--><div class="v-col-padding" style="box-sizing: border-box; height: 100%; padding: 0px 0px 0px 10px;border-top: 0px solid transparent;border-left: 0px solid transparent;border-right: 0px solid transparent;border-bottom: 0px solid transparent;"><!--<![endif]-->
   
 <table id="u_content_heading_12" style="font-family:arial,helvetica,sans-serif;" role="presentation" cellpadding="0" cellspacing="0" width="100%" border="0">
   <tbody>
@@ -469,7 +440,7 @@ table, td { color: #000000; } #u_body a { color: #ffa31a; text-decoration: under
       <td style="overflow-wrap:break-word;word-break:break-word;padding:10px 10px 5px;font-family:arial,helvetica,sans-serif;" align="left">
         
   <!--[if mso]><table width="100%"><tr><td><![endif]-->
-    <h3 class="v-color v-text-align v-font-size" style="margin: 0px; color: #ffffff; line-height: 140%; text-align: left; word-wrap: break-word; font-family: courier new,courier; font-size: 18px; font-weight: 400;">🌐 <strong>Top News From the World</strong></h3>
+    <h3 class="v-color v-text-align v-font-size" style="margin: 0px; color: #ffffff; line-height: 140%; text-align: left; word-wrap: break-word; font-family: courier new,courier; font-size: 18px; font-weight: 400;"><span><span>🌐 <strong>Top News From the World</strong></span></span></h3>
   <!--[if mso]></td></tr></table><![endif]-->
 
       </td>
@@ -495,6 +466,35 @@ table, td { color: #000000; } #u_body a { color: #ffa31a; text-decoration: under
   </div>
 </div>
 <!--[if (mso)|(IE)]></td><![endif]-->
+<!--[if (mso)|(IE)]><td align="center" width="230" class="v-col-padding" style="background-color: #32343e;width: 230px;padding: 0px;border-top: 0px solid transparent;border-left: 0px solid transparent;border-right: 0px solid transparent;border-bottom: 0px solid transparent;" valign="top"><![endif]-->
+<div class="u-col u-col-33p33" style="max-width: 320px;min-width: 230px;display: table-cell;vertical-align: top;">
+  <div style="background-color: #32343e;height: 100%;width: 100% !important;">
+  <!--[if (!mso)&(!IE)]><!--><div class="v-col-padding" style="box-sizing: border-box; height: 100%; padding: 0px;border-top: 0px solid transparent;border-left: 0px solid transparent;border-right: 0px solid transparent;border-bottom: 0px solid transparent;"><!--<![endif]-->
+  
+<table id="u_content_image_9" style="font-family:arial,helvetica,sans-serif;" role="presentation" cellpadding="0" cellspacing="0" width="100%" border="0">
+  <tbody>
+    <tr>
+      <td style="overflow-wrap:break-word;word-break:break-word;padding:15px;font-family:arial,helvetica,sans-serif;" align="left">
+        
+<table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr>
+    <td class="v-text-align" style="padding-right: 0px;padding-left: 0px;" align="center">
+      
+      <img align="center" border="0" src="https://i.imgur.com/Jg60hlg.jpeg" alt="Image" title="Image" style="outline: none;text-decoration: none;-ms-interpolation-mode: bicubic;clear: both;display: inline-block !important;border: none;height: auto;float: none;width: 100%;max-width: 200px;" width="200" class="v-src-width v-src-max-width"/>
+      
+    </td>
+  </tr>
+</table>
+
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+  <!--[if (!mso)&(!IE)]><!--></div><!--<![endif]-->
+  </div>
+</div>
+<!--[if (mso)|(IE)]></td><![endif]-->
       <!--[if (mso)|(IE)]></tr></table></td></tr></table><![endif]-->
     </div>
   </div>
@@ -505,10 +505,47 @@ table, td { color: #000000; } #u_body a { color: #ffa31a; text-decoration: under
   
   
 <div class="u-row-container v-row-padding--vertical" style="padding: 0px;background-color: transparent">
-  <div class="u-row" style="margin: 0 auto 0 0;min-width: 320px;max-width: 690px;overflow-wrap: break-word;word-wrap: break-word;word-break: break-word;background-color: #e9e1ce;">
+  <div class="u-row" style="margin: 0 auto;min-width: 320px;max-width: 690px;overflow-wrap: break-word;word-wrap: break-word;word-break: break-word;background-color: #e9e1ce;">
     <div style="border-collapse: collapse;display: table;width: 100%;height: 100%;background-color: transparent;">
-      <!--[if (mso)|(IE)]><table width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td style="padding: 0px;background-color: transparent;" align="left"><table cellpadding="0" cellspacing="0" border="0" style="width:690px;"><tr style="background-color: #e9e1ce;"><![endif]-->
+      <!--[if (mso)|(IE)]><table width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td style="padding: 0px;background-color: transparent;" align="center"><table cellpadding="0" cellspacing="0" border="0" style="width:690px;"><tr style="background-color: #e9e1ce;"><![endif]-->
       
+<!--[if (mso)|(IE)]><td align="center" width="460" class="v-col-padding" style="background-color: #32343e;width: 460px;padding: 0px 0px 0px 10px;border-top: 0px solid transparent;border-left: 0px solid transparent;border-right: 0px solid transparent;border-bottom: 0px solid transparent;" valign="top"><![endif]-->
+<div class="u-col u-col-66p67" style="max-width: 320px;min-width: 460px;display: table-cell;vertical-align: top;">
+  <div style="background-color: #32343e;height: 100%;width: 100% !important;">
+  <!--[if (!mso)&(!IE)]><!--><div class="v-col-padding" style="box-sizing: border-box; height: 100%; padding: 0px 0px 0px 10px;border-top: 0px solid transparent;border-left: 0px solid transparent;border-right: 0px solid transparent;border-bottom: 0px solid transparent;"><!--<![endif]-->
+  
+<table id="u_content_heading_15" style="font-family:arial,helvetica,sans-serif;" role="presentation" cellpadding="0" cellspacing="0" width="100%" border="0">
+  <tbody>
+    <tr>
+      <td style="overflow-wrap:break-word;word-break:break-word;padding:10px 10px 5px;font-family:arial,helvetica,sans-serif;" align="left">
+        
+  <!--[if mso]><table width="100%"><tr><td><![endif]-->
+    <h3 class="v-color v-text-align v-font-size" style="margin: 0px; color: #ffffff; line-height: 140%; text-align: left; word-wrap: break-word; font-family: courier new,courier; font-size: 18px; font-weight: 400;"><span>✌ <strong>Would you like something else?</strong></span></h3>
+  <!--[if mso]></td></tr></table><![endif]-->
+
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table id="u_content_text_15" style="font-family:arial,helvetica,sans-serif;" role="presentation" cellpadding="0" cellspacing="0" width="100%" border="0">
+  <tbody>
+    <tr>
+      <td style="overflow-wrap:break-word;word-break:break-word;padding:0px 10px 10px;font-family:arial,helvetica,sans-serif;" align="left">
+        
+  <div class="v-color v-text-align v-font-size" style="font-size: 14px; color: #ffffff; line-height: 140%; text-align: left; word-wrap: break-word;">
+    <p style="line-height: 140%;">Your preferences matter. Let me know!</p>
+  </div>
+
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+  <!--[if (!mso)&(!IE)]><!--></div><!--<![endif]-->
+  </div>
+</div>
+<!--[if (mso)|(IE)]></td><![endif]-->
 <!--[if (mso)|(IE)]><td align="center" width="230" class="v-col-padding" style="background-color: #32343e;width: 230px;padding: 0px;border-top: 0px solid transparent;border-left: 0px solid transparent;border-right: 0px solid transparent;border-bottom: 0px solid transparent;" valign="top"><![endif]-->
 <div class="u-col u-col-33p33" style="max-width: 320px;min-width: 230px;display: table-cell;vertical-align: top;">
   <div style="background-color: #32343e;height: 100%;width: 100% !important;">
@@ -538,43 +575,6 @@ table, td { color: #000000; } #u_body a { color: #ffa31a; text-decoration: under
   </div>
 </div>
 <!--[if (mso)|(IE)]></td><![endif]-->
-<!--[if (mso)|(IE)]><td align="center" width="460" class="v-col-padding" style="background-color: #32343e;width: 460px;padding: 0px;border-top: 0px solid transparent;border-left: 0px solid transparent;border-right: 0px solid transparent;border-bottom: 0px solid transparent;" valign="top"><![endif]-->
-<div class="u-col u-col-66p67" style="max-width: 320px;min-width: 460px;display: table-cell;vertical-align: top;">
-  <div style="background-color: #32343e;height: 100%;width: 100% !important;">
-  <!--[if (!mso)&(!IE)]><!--><div class="v-col-padding" style="box-sizing: border-box; height: 100%; padding: 0px;border-top: 0px solid transparent;border-left: 0px solid transparent;border-right: 0px solid transparent;border-bottom: 0px solid transparent;"><!--<![endif]-->
-  
-<table id="u_content_heading_13" style="font-family:arial,helvetica,sans-serif;" role="presentation" cellpadding="0" cellspacing="0" width="100%" border="0">
-  <tbody>
-    <tr>
-      <td style="overflow-wrap:break-word;word-break:break-word;padding:10px 10px 5px;font-family:arial,helvetica,sans-serif;" align="left">
-        
-  <!--[if mso]><table width="100%"><tr><td><![endif]-->
-    <h3 class="v-color v-text-align v-font-size" style="margin: 0px; color: #ffffff; line-height: 140%; text-align: left; word-wrap: break-word; font-family: courier new,courier; font-size: 18px; font-weight: 400;"><span>✌ <strong>Would you like something else?</strong></span></h3>
-  <!--[if mso]></td></tr></table><![endif]-->
-
-      </td>
-    </tr>
-  </tbody>
-</table>
-
-<table id="u_content_text_13" style="font-family:arial,helvetica,sans-serif;" role="presentation" cellpadding="0" cellspacing="0" width="100%" border="0">
-  <tbody>
-    <tr>
-      <td style="overflow-wrap:break-word;word-break:break-word;padding:0px 10px 10px;font-family:arial,helvetica,sans-serif;" align="left">
-        
-  <div class="v-color v-text-align v-font-size" style="font-size: 14px; color: #ffffff; line-height: 140%; text-align: left; word-wrap: break-word;">
-    <p style="line-height: 140%;">Your preferences matter. Let me know!</p>
-  </div>
-
-      </td>
-    </tr>
-  </tbody>
-</table>
-
-  <!--[if (!mso)&(!IE)]><!--></div><!--<![endif]-->
-  </div>
-</div>
-<!--[if (mso)|(IE)]></td><![endif]-->
       <!--[if (mso)|(IE)]></tr></table></td></tr></table><![endif]-->
     </div>
   </div>
@@ -585,9 +585,9 @@ table, td { color: #000000; } #u_body a { color: #ffa31a; text-decoration: under
   
   
 <div class="u-row-container v-row-padding--vertical" style="padding: 0px;background-color: transparent">
-  <div class="u-row" style="margin: 0 auto 0 0;min-width: 320px;max-width: 690px;overflow-wrap: break-word;word-wrap: break-word;word-break: break-word;background-color: transparent;">
+  <div class="u-row" style="margin: 0 auto;min-width: 320px;max-width: 690px;overflow-wrap: break-word;word-wrap: break-word;word-break: break-word;background-color: transparent;">
     <div style="border-collapse: collapse;display: table;width: 100%;height: 100%;background-color: transparent;">
-      <!--[if (mso)|(IE)]><table width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td style="padding: 0px;background-color: transparent;" align="left"><table cellpadding="0" cellspacing="0" border="0" style="width:690px;"><tr style="background-color: transparent;"><![endif]-->
+      <!--[if (mso)|(IE)]><table width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td style="padding: 0px;background-color: transparent;" align="center"><table cellpadding="0" cellspacing="0" border="0" style="width:690px;"><tr style="background-color: transparent;"><![endif]-->
       
 <!--[if (mso)|(IE)]><td align="center" width="690" class="v-col-padding" style="background-color: #32343e;width: 690px;padding: 0px;border-top: 0px solid transparent;border-left: 0px solid transparent;border-right: 0px solid transparent;border-bottom: 0px solid transparent;border-radius: 0px;-webkit-border-radius: 0px; -moz-border-radius: 0px;" valign="top"><![endif]-->
 <div class="u-col u-col-100" style="max-width: 320px;min-width: 690px;display: table-cell;vertical-align: top;">
@@ -622,9 +622,9 @@ table, td { color: #000000; } #u_body a { color: #ffa31a; text-decoration: under
   
   
 <div class="u-row-container v-row-padding--vertical" style="padding: 0px;background-color: transparent">
-  <div class="u-row" style="margin: 0 auto 0 0;min-width: 320px;max-width: 690px;overflow-wrap: break-word;word-wrap: break-word;word-break: break-word;background-color: transparent;">
+  <div class="u-row" style="margin: 0 auto;min-width: 320px;max-width: 690px;overflow-wrap: break-word;word-wrap: break-word;word-break: break-word;background-color: transparent;">
     <div style="border-collapse: collapse;display: table;width: 100%;height: 100%;background-color: transparent;">
-      <!--[if (mso)|(IE)]><table width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td style="padding: 0px;background-color: transparent;" align="left"><table cellpadding="0" cellspacing="0" border="0" style="width:690px;"><tr style="background-color: transparent;"><![endif]-->
+      <!--[if (mso)|(IE)]><table width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td style="padding: 0px;background-color: transparent;" align="center"><table cellpadding="0" cellspacing="0" border="0" style="width:690px;"><tr style="background-color: transparent;"><![endif]-->
       
 <!--[if (mso)|(IE)]><td align="center" width="690" class="v-col-padding" style="width: 690px;padding: 0px;border-top: 0px solid transparent;border-left: 0px solid transparent;border-right: 0px solid transparent;border-bottom: 0px solid transparent;" valign="top"><![endif]-->
 <div class="u-col u-col-100" style="max-width: 320px;min-width: 690px;display: table-cell;vertical-align: top;">
@@ -665,9 +665,9 @@ table, td { color: #000000; } #u_body a { color: #ffa31a; text-decoration: under
   
   
 <div class="u-row-container v-row-padding--vertical" style="padding: 0px;background-color: transparent">
-  <div class="u-row" style="margin: 0 auto 0 0;min-width: 320px;max-width: 690px;overflow-wrap: break-word;word-wrap: break-word;word-break: break-word;background-color: transparent;">
+  <div class="u-row" style="margin: 0 auto;min-width: 320px;max-width: 690px;overflow-wrap: break-word;word-wrap: break-word;word-break: break-word;background-color: transparent;">
     <div style="border-collapse: collapse;display: table;width: 100%;height: 100%;background-color: transparent;">
-      <!--[if (mso)|(IE)]><table width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td style="padding: 0px;background-color: transparent;" align="left"><table cellpadding="0" cellspacing="0" border="0" style="width:690px;"><tr style="background-color: transparent;"><![endif]-->
+      <!--[if (mso)|(IE)]><table width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td style="padding: 0px;background-color: transparent;" align="center"><table cellpadding="0" cellspacing="0" border="0" style="width:690px;"><tr style="background-color: transparent;"><![endif]-->
       
 <!--[if (mso)|(IE)]><td align="center" width="690" class="v-col-padding" style="width: 690px;padding: 0px;border-top: 0px solid transparent;border-left: 0px solid transparent;border-right: 0px solid transparent;border-bottom: 0px solid transparent;" valign="top"><![endif]-->
 <div class="u-col u-col-100" style="max-width: 320px;min-width: 690px;display: table-cell;vertical-align: top;">
@@ -738,9 +738,9 @@ table, td { color: #000000; } #u_body a { color: #ffa31a; text-decoration: under
   
   
 <div class="u-row-container v-row-padding--vertical" style="padding: 0px;background-color: transparent">
-  <div class="u-row" style="margin: 0 auto 0 0;min-width: 320px;max-width: 690px;overflow-wrap: break-word;word-wrap: break-word;word-break: break-word;background-color: transparent;">
+  <div class="u-row" style="margin: 0 auto;min-width: 320px;max-width: 690px;overflow-wrap: break-word;word-wrap: break-word;word-break: break-word;background-color: transparent;">
     <div style="border-collapse: collapse;display: table;width: 100%;height: 100%;background-color: transparent;">
-      <!--[if (mso)|(IE)]><table width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td style="padding: 0px;background-color: transparent;" align="left"><table cellpadding="0" cellspacing="0" border="0" style="width:690px;"><tr style="background-color: transparent;"><![endif]-->
+      <!--[if (mso)|(IE)]><table width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td style="padding: 0px;background-color: transparent;" align="center"><table cellpadding="0" cellspacing="0" border="0" style="width:690px;"><tr style="background-color: transparent;"><![endif]-->
       
 <!--[if (mso)|(IE)]><td align="center" width="690" class="v-col-padding" style="width: 690px;padding: 0px;border-top: 0px solid transparent;border-left: 0px solid transparent;border-right: 0px solid transparent;border-bottom: 0px solid transparent;" valign="top"><![endif]-->
 <div class="u-col u-col-100" style="max-width: 320px;min-width: 690px;display: table-cell;vertical-align: top;">
@@ -754,7 +754,7 @@ table, td { color: #000000; } #u_body a { color: #ffa31a; text-decoration: under
         
   <div class="v-color v-text-align v-font-size" style="font-size: 14px; color: #333333; line-height: 140%; text-align: center; word-wrap: break-word;">
     <p style="font-size: 14px; line-height: 140%;"><span style="font-size: 12px; line-height: 16.8px; font-family: arial, helvetica, sans-serif;">If you ever have questions or just want to chat, feel free to drop me a message. All rights reserved.</span></p>
-<p style="font-size: 14px; line-height: 140%;"><span style="font-size: 12px; line-height: 16.8px; font-family: arial, helvetica, sans-serif;"><a rel="noopener" href="https://cloudnature.net/newsletter/unsubscribe" target="_blank"><span style="text-decoration: underline; font-size: 12px; line-height: 16.8px;">Unsubscribe</span></a>.</span><br /><span style="font-size: 12px; line-height: 16.8px; font-family: arial, helvetica, sans-serif;">Matteo Depascale</span></p>
+<p style="font-size: 14px; line-height: 140%;"><span style="font-size: 12px; line-height: 16.8px; font-family: arial, helvetica, sans-serif;"><a rel="noopener" href="https://cloudnature.net/newsletters/unsubscribe" target="_blank"><span style="text-decoration: underline; font-size: 12px; line-height: 16.8px;">Unsubscribe</span></a>.</span><br /><span style="font-size: 12px; line-height: 16.8px; font-family: arial, helvetica, sans-serif;">Matteo Depascale</span></p>
   </div>
 
       </td>

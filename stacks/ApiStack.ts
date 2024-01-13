@@ -2,6 +2,7 @@ import { ApiGatewayV1Api, Cognito, use, type StackContext } from 'sst/constructs
 import { ApiPermissionStack } from './ApiPermissionStack'
 import { DatabaseStack } from './DatabaseStack'
 import { SchedulerStack } from './SchedulerStack'
+import { EmailStack } from './EmailStack'
 
 export const ApiStack = ({ stack, app }: StackContext): void => {
   const { apiRole } = use(ApiPermissionStack)
@@ -10,6 +11,7 @@ export const ApiStack = ({ stack, app }: StackContext): void => {
     newsletterSubscribersTable
   } = use(DatabaseStack)
   const { emailStateMachine } = use(SchedulerStack)
+  const { configurationSetName, identityName } = use(EmailStack)
 
   // https://docs.sst.dev/constructs/Cognito
   const auth = new Cognito(stack, 'Auth', {
@@ -69,7 +71,14 @@ export const ApiStack = ({ stack, app }: StackContext): void => {
         authorizer: 'none',
         function: {
           handler: 'packages/functions/src/subscriptions/subscribe/index.handler',
-          functionName: `${stack.stackName}-post-subscribe`
+          functionName: `${stack.stackName}-post-subscribe`,
+          environment: {
+            DOMAIN_NAME: process.env.DOMAIN_NAME ?? '',
+            SOURCE_EMAIL_ADDRESS: process.env.SOURCE_EMAIL_ADDRESS ?? '',
+            REPLY_TO_ADDRESS: process.env.REPLY_TO_ADDRESS ?? '',
+            CONFIGURATION_SET_NAME: configurationSetName,
+            IDENTITY_ARN: `arn:aws:ses:${stack.region}:${stack.account}:identity/${identityName}`
+          }
         }
       },
       /**

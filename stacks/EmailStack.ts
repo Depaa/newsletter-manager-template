@@ -165,6 +165,13 @@ export const EmailStack = ({ stack, app }: StackContext): Record<string, string>
   })
 
   // https://docs.aws.amazon.com/cdk/api/v2/docs/aws-cdk-lib.aws_ses-readme.html#virtual-deliverability-manager-vdm
+
+  /**
+   * Attention
+   * Please be mindful "VDM" can only be activated one time
+   * Consider adding a condition to enable it only for production
+   */
+
   // eslint-disable-next-line no-new
   new VdmAttributes(stack, 'VdmTracking')
 
