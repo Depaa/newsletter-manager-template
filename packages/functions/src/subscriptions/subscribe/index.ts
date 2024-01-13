@@ -26,7 +26,7 @@ const createSendEmailCommand = (toAddress: string): SendEmailCommand => {
       },
       Subject: {
         Charset: 'UTF-8',
-        Data: '👋 Welcome! Thanks for joining CloudNature newsletter 🚀'
+        Data: 'Welcome!👋 Thanks for joining CloudNature newsletter 🚀'
       }
     },
     Source: process.env.SOURCE_EMAIL_ADDRESS,
@@ -63,14 +63,26 @@ const main: Handler<FromSchema<typeof bodySchema>, void, void> = async (event) =
         exists: false
       }
     })
+
+    await sendEmail(event.body.email)
+    console.info('Successfully subscribed')
   } catch (e: any) {
     if (e.name !== 'ConditionalCheckFailedException') {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-      throw new Error(e)
+      console.info('User already subscribed')
+
+      const subscription = await SubscriptionsTableDefinition.get({
+        email: event.body.email
+      })
+
+      if (subscription.Item?.status === SubscriptionStatus.DISABLED) {
+        await SubscriptionsTableDefinition.put(params)
+        console.info('Successfully subscribed a previous unsubscribed user')
+      } else {
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+        throw new Error(e)
+      }
     }
   }
-
-  await sendEmail(event.body.email)
 
   return {
     statusCode: 204,
