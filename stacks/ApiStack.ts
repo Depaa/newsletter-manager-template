@@ -49,7 +49,6 @@ export const ApiStack = ({ stack, app }: StackContext): void => {
           EMAIL_SCHEDULER_SF_ARN: emailStateMachine.stateMachineArn
         },
         timeout: 29,
-        bind: [newslettersTable, newsletterSubscribersTable],
         architecture: 'arm_64'
       }
     },
@@ -60,7 +59,7 @@ export const ApiStack = ({ stack, app }: StackContext): void => {
       /**
        * Newsletter Subscribers
        */
-      'POST /subscriptions/{token}/unsubscribe': {
+      'POST /subscriptions/unsubscribe': {
         authorizer: 'none',
         function: {
           handler: 'packages/functions/src/subscriptions/unsubscribe/index.handler',

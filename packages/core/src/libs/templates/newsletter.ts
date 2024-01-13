@@ -224,7 +224,7 @@ export default `<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional //EN" 
         background: #282c34;
         white-space: break-spaces;
       }
-      #content-container img {
+      #content-container img:not([data-emoji]) {
         display: block;
         margin-left: auto;
         margin-right: auto;
@@ -1091,7 +1091,7 @@ export default `<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional //EN" 
                                       "
                                       ><a
                                         rel="noopener"
-                                        href="https://cloudnature.net/newsletter/unsubscribe"
+                                        href="https://cloudnature.net/newsletters/unsubscribe"
                                         target="_blank"
                                         ><span
                                           style="

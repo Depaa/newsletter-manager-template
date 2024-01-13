@@ -1,4 +1,4 @@
-import UnauthorizedError from '@core/libs/errors/UnauthorizedError'
+import NotFoundError from '@core/libs/errors/NotFoundError'
 import { middyfy, type Handler } from '@core/libs/middyWrapper'
 import type { FromSchema } from 'json-schema-to-ts'
 import { SubscriptionsTableDefinition } from '../dynamodb'
@@ -11,7 +11,7 @@ const main: Handler<FromSchema<typeof bodySchema>, void, void> = async (event) =
   })
 
   if (subscription.Item == null) {
-    throw new UnauthorizedError()
+    throw new NotFoundError()
   }
 
   const params = {
@@ -23,6 +23,7 @@ const main: Handler<FromSchema<typeof bodySchema>, void, void> = async (event) =
   await SubscriptionsTableDefinition.update(params, {
     returnValues: 'ALL_NEW'
   })
+  console.info('Successfully unsubscribed')
 
   return {
     statusCode: 204,
