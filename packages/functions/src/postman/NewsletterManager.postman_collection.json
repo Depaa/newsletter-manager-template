@@ -356,61 +356,49 @@
 					]
 				},
 				{
-					"name": ":token",
+					"name": "unsubscribe",
 					"item": [
 						{
-							"name": "unsubscribe",
-							"item": [
+							"name": "create",
+							"event": [
 								{
-									"name": "create",
-									"event": [
-										{
-											"listen": "test",
-											"script": {
-												"exec": [
-													""
-												],
-												"type": "text/javascript"
-											}
-										}
-									],
-									"protocolProfileBehavior": {
-										"disabledSystemHeaders": {}
-									},
-									"request": {
-										"method": "POST",
-										"header": [],
-										"body": {
-											"mode": "raw",
-											"raw": "{\r\n    \"email\": \"{{NEWSLETTER_SUBSCRIBER}}\"\r\n}",
-											"options": {
-												"raw": {
-													"language": "json"
-												}
-											}
-										},
-										"url": {
-											"raw": "{{BASE_URL}}/{{ENV}}/subscriptions/:token/unsubscribe",
-											"host": [
-												"{{BASE_URL}}"
-											],
-											"path": [
-												"{{ENV}}",
-												"subscriptions",
-												":token",
-												"unsubscribe"
-											],
-											"variable": [
-												{
-													"key": "token",
-													"value": ""
-												}
-											]
-										}
-									},
-									"response": []
+									"listen": "test",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
 								}
-							]
+							],
+							"protocolProfileBehavior": {
+								"disabledSystemHeaders": {}
+							},
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"email\": \"{{NEWSLETTER_SUBSCRIBER}}\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{BASE_URL}}/{{ENV}}/subscriptions/unsubscribe",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"{{ENV}}",
+										"subscriptions",
+										"unsubscribe"
+									]
+								}
+							},
+							"response": []
 						}
 					]
 				}
