@@ -5,10 +5,10 @@ import { SubscriptionsTableDefinition } from '../dynamodb'
 import type Subscription from '../interface'
 import { SubscriptionStatus } from '../interface'
 import { schema, type bodySchema } from './schema'
-import { SendEmailCommand, type SendEmailCommandOutput, SESClient } from '@aws-sdk/client-ses'
+import { SendEmailCommand, type SendEmailCommandOutput, SESv2Client } from '@aws-sdk/client-sesv2'
 import welcome from '../../../../core/src/libs/templates/welcome'
 
-const sesClient = new SESClient()
+const sesClient = new SESv2Client()
 
 const createSendEmailCommand = (toAddress: string): SendEmailCommand => {
   return new SendEmailCommand({
@@ -17,24 +17,26 @@ const createSendEmailCommand = (toAddress: string): SendEmailCommand => {
         toAddress
       ]
     },
-    Message: {
-      Body: {
-        Html: {
+    Content: {
+      Simple: {
+        Body: {
+          Html: {
+            Charset: 'UTF-8',
+            Data: welcome
+          }
+        },
+        Subject: {
           Charset: 'UTF-8',
-          Data: welcome
+          Data: 'Welcome!👋 Thanks for joining CloudNature newsletter 🚀'
         }
-      },
-      Subject: {
-        Charset: 'UTF-8',
-        Data: 'Welcome!👋 Thanks for joining CloudNature newsletter 🚀'
       }
     },
-    Source: process.env.SOURCE_EMAIL_ADDRESS,
+    FromEmailAddress: process.env.SOURCE_EMAIL_ADDRESS,
+    FromEmailAddressIdentityArn: process.env.IDENTITY_ARN,
     ReplyToAddresses: [
       process.env.REPLY_TO_ADDRESS ?? ''
     ],
-    ConfigurationSetName: process.env.CONFIGURATION_SET_NAME,
-    SourceArn: process.env.IDENTITY_ARN
+    ConfigurationSetName: process.env.CONFIGURATION_SET_NAME
   })
 }
 
@@ -55,6 +57,7 @@ const main: Handler<FromSchema<typeof bodySchema>, void, void> = async (event) =
     createdAt: Date.now(),
     status: SubscriptionStatus.ENABLED
   }
+  console.debug(params)
 
   try {
     await SubscriptionsTableDefinition.put(params, {
@@ -63,24 +66,29 @@ const main: Handler<FromSchema<typeof bodySchema>, void, void> = async (event) =
         exists: false
       }
     })
+    console.info('Successfully subcribed')
 
     await sendEmail(event.body.email)
-    console.info('Successfully subscribed')
+    console.info('Successfully sent email')
   } catch (e: any) {
+    console.error(e)
     if (e.name !== 'ConditionalCheckFailedException') {
-      console.info('User already subscribed')
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+      throw new Error(e)
+    }
+    console.info('User already existing')
 
-      const subscription = await SubscriptionsTableDefinition.get({
-        email: event.body.email
-      })
+    const subscription = await SubscriptionsTableDefinition.get({
+      email: event.body.email
+    })
+    console.info('Successfully get subscription')
+    console.debug(subscription)
 
-      if (subscription.Item?.status === SubscriptionStatus.DISABLED) {
-        await SubscriptionsTableDefinition.put(params)
-        console.info('Successfully subscribed a previous unsubscribed user')
-      } else {
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-        throw new Error(e)
-      }
+    if (subscription.Item?.status === SubscriptionStatus.DISABLED) {
+      await SubscriptionsTableDefinition.put(params)
+      console.info('Successfully subscribed a previous unsubscribed user')
+      await sendEmail(event.body.email)
+      console.info('Successfully sent email')
     }
   }
 

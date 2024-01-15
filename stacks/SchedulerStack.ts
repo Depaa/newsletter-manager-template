@@ -159,7 +159,7 @@ export const SchedulerStack = ({ stack }: StackContext): Record<string, StateMac
                               S: 'Subscribed'
                             }
                           },
-                          Limit: 3,
+                          Limit: 50,
                           'ExclusiveStartKey.$': '$.dynamodbConfig.LastEvaluatedKey'
                         },
                         Resource: 'arn:aws:states:::aws-sdk:dynamodb:query',
@@ -266,7 +266,7 @@ export const SchedulerStack = ({ stack }: StackContext): Record<string, StateMac
                 Type: 'Pass',
                 Next: 'Send emails map',
                 Parameters: {
-                  'toAddressDestinations.$': 'States.ArrayPartition($.toAddressDestinations, 3)',
+                  'toAddressDestinations.$': 'States.ArrayPartition($.toAddressDestinations, 50)',
                   templateData: {
                     'subject.$': '$.items[0].subject.S',
                     'body.$': '$.items[0].content.S'
