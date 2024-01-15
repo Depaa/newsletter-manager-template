@@ -126,7 +126,7 @@ table, td { color: #000000; } #u_body a { color: #ffa31a; text-decoration: under
   <tr>
     <td class="v-text-align" style="padding-right: 0px;padding-left: 0px;" align="center">
       
-      <img align="center" border="0" src="https://i.imgur.com/qlSxGzR.png" alt="Thank You" title="Thank You" style="outline: none;text-decoration: none;-ms-interpolation-mode: bicubic;clear: both;display: inline-block !important;border: none;height: auto;float: none;width: 100%;max-width: 690px;" width="690" class="v-src-width v-src-max-width"/>
+      <img align="center" border="0" src="https://cloudnature.net/images/thank-you.png" alt="Thank You" title="Thank You" style="outline: none;text-decoration: none;-ms-interpolation-mode: bicubic;clear: both;display: inline-block !important;border: none;height: auto;float: none;width: 100%;max-width: 690px;" width="690" class="v-src-width v-src-max-width"/>
       
     </td>
   </tr>
@@ -283,7 +283,7 @@ table, td { color: #000000; } #u_body a { color: #ffa31a; text-decoration: under
   <tr>
     <td class="v-text-align" style="padding-right: 0px;padding-left: 0px;" align="center">
       
-      <img align="center" border="0" src="https://i.imgur.com/dfpyArg.jpg" alt="Image" title="Image" style="outline: none;text-decoration: none;-ms-interpolation-mode: bicubic;clear: both;display: inline-block !important;border: none;height: auto;float: none;width: 100%;max-width: 200px;" width="200" class="v-src-width v-src-max-width"/>
+      <img align="center" border="0" src="https://cloudnature.net/images/1705137368356-98020.jpg" alt="Image" title="Image" style="outline: none;text-decoration: none;-ms-interpolation-mode: bicubic;clear: both;display: inline-block !important;border: none;height: auto;float: none;width: 100%;max-width: 200px;" width="200" class="v-src-width v-src-max-width"/>
       
     </td>
   </tr>
@@ -363,7 +363,7 @@ table, td { color: #000000; } #u_body a { color: #ffa31a; text-decoration: under
   <tr>
     <td class="v-text-align" style="padding-right: 0px;padding-left: 0px;" align="center">
       
-      <img align="center" border="0" src="https://content.cloudnature.net/images/3accb6ef-b659-44f0-a800-9ca6cb5ea89d/588ed65e-6c40-427f-94eb-528941c1bf88" alt="Image" title="Image" style="outline: none;text-decoration: none;-ms-interpolation-mode: bicubic;clear: both;display: inline-block !important;border: none;height: auto;float: none;width: 100%;max-width: 200px;" width="200" class="v-src-width v-src-max-width"/>
+      <img align="center" border="0" src="https://cloudnature.net/images/rocket-genai-image.png" alt="Image" title="Image" style="outline: none;text-decoration: none;-ms-interpolation-mode: bicubic;clear: both;display: inline-block !important;border: none;height: auto;float: none;width: 100%;max-width: 200px;" width="200" class="v-src-width v-src-max-width"/>
       
     </td>
   </tr>
@@ -480,7 +480,7 @@ table, td { color: #000000; } #u_body a { color: #ffa31a; text-decoration: under
   <tr>
     <td class="v-text-align" style="padding-right: 0px;padding-left: 0px;" align="center">
       
-      <img align="center" border="0" src="https://i.imgur.com/Jg60hlg.jpeg" alt="Image" title="Image" style="outline: none;text-decoration: none;-ms-interpolation-mode: bicubic;clear: both;display: inline-block !important;border: none;height: auto;float: none;width: 100%;max-width: 200px;" width="200" class="v-src-width v-src-max-width"/>
+      <img align="center" border="0" src="https://cloudnature.net/images/1705137446647-873197.jpg" alt="Image" title="Image" style="outline: none;text-decoration: none;-ms-interpolation-mode: bicubic;clear: both;display: inline-block !important;border: none;height: auto;float: none;width: 100%;max-width: 200px;" width="200" class="v-src-width v-src-max-width"/>
       
     </td>
   </tr>
@@ -560,7 +560,7 @@ table, td { color: #000000; } #u_body a { color: #ffa31a; text-decoration: under
   <tr>
     <td class="v-text-align" style="padding-right: 0px;padding-left: 0px;" align="center">
       
-      <img align="center" border="0" src="https://content.cloudnature.net/images/dbe80704-e287-401c-a23b-86471816c3ef/373bf716-0680-4b1a-9cac-0d611f40d3f4" alt="Image" title="Image" style="outline: none;text-decoration: none;-ms-interpolation-mode: bicubic;clear: both;display: inline-block !important;border: none;height: auto;float: none;width: 100%;max-width: 200px;" width="200" class="v-src-width v-src-max-width"/>
+      <img align="center" border="0" src="https://cloudnature.net/images/robot-genai-image.jpg" alt="Image" title="Image" style="outline: none;text-decoration: none;-ms-interpolation-mode: bicubic;clear: both;display: inline-block !important;border: none;height: auto;float: none;width: 100%;max-width: 200px;" width="200" class="v-src-width v-src-max-width"/>
       
     </td>
   </tr>
@@ -600,7 +600,7 @@ table, td { color: #000000; } #u_body a { color: #ffa31a; text-decoration: under
       <td style="overflow-wrap:break-word;word-break:break-word;padding:30px 10px 0px;font-family:arial,helvetica,sans-serif;" align="left">
         
   <!--[if mso]><table width="100%"><tr><td><![endif]-->
-    <h1 class="v-color v-text-align v-font-size" style="margin: 0px; color: #ffffff; line-height: 140%; text-align: center; word-wrap: break-word; font-family: courier new,courier; font-size: 22px; font-weight: 700;"><span><span></span></span></h1>
+    <h1 class="v-color v-text-align v-font-size" style="margin: 0px; color: #ffffff; line-height: 140%; text-align: center; word-wrap: break-word; font-family: courier new,courier; font-size: 22px; font-weight: 700;"><span><span><span><span></span></span></span></span></h1>
   <!--[if mso]></td></tr></table><![endif]-->
 
       </td>
@@ -631,6 +631,56 @@ table, td { color: #000000; } #u_body a { color: #ffa31a; text-decoration: under
   <div style="height: 100%;width: 100% !important;">
   <!--[if (!mso)&(!IE)]><!--><div class="v-col-padding" style="box-sizing: border-box; height: 100%; padding: 0px;border-top: 0px solid transparent;border-left: 0px solid transparent;border-right: 0px solid transparent;border-bottom: 0px solid transparent;"><!--<![endif]-->
   
+<table style="font-family:arial,helvetica,sans-serif;" role="presentation" cellpadding="0" cellspacing="0" width="100%" border="0">
+  <tbody>
+    <tr>
+      <td style="overflow-wrap:break-word;word-break:break-word;padding:40px 10px 10px;font-family:arial,helvetica,sans-serif;" align="left">
+        
+  <table height="0px" align="center" border="0" cellpadding="0" cellspacing="0" width="100%" style="border-collapse: collapse;table-layout: fixed;border-spacing: 0;mso-table-lspace: 0pt;mso-table-rspace: 0pt;vertical-align: top;border-top: 1px solid #ffa31a;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%">
+    <tbody>
+      <tr style="vertical-align: top">
+        <td style="word-break: break-word;border-collapse: collapse !important;vertical-align: top;font-size: 0px;line-height: 0px;mso-line-height-rule: exactly;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%">
+          <span>&#160;</span>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table style="font-family:arial,helvetica,sans-serif;" role="presentation" cellpadding="0" cellspacing="0" width="100%" border="0">
+  <tbody>
+    <tr>
+      <td style="overflow-wrap:break-word;word-break:break-word;padding:10px;font-family:arial,helvetica,sans-serif;" align="left">
+        
+  <!--[if mso]><table width="100%"><tr><td><![endif]-->
+    <h1 class="v-color v-text-align v-font-size" style="margin: 0px; line-height: 140%; text-align: left; word-wrap: break-word; font-size: 22px; font-weight: 400;"><span><span>🧹Some housekeeping...</span></span></h1>
+  <!--[if mso]></td></tr></table><![endif]-->
+
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table style="font-family:arial,helvetica,sans-serif;" role="presentation" cellpadding="0" cellspacing="0" width="100%" border="0">
+  <tbody>
+    <tr>
+      <td style="overflow-wrap:break-word;word-break:break-word;padding:10px;font-family:arial,helvetica,sans-serif;" align="left">
+        
+  <div class="v-color v-text-align v-font-size" style="font-size: 14px; line-height: 140%; text-align: left; word-wrap: break-word;">
+    <p style="line-height: 140%;">If you can't find the newsletter, please check your spam folder. Kindly move this email to your Inbox. Thank you! 😊</p>
+<p style="line-height: 140%;"></p>
+<p style="line-height: 140%;">You can always see everything at <a rel="noopener" href="https://cloudnature.net/newsletters" target="_blank">CloudNature</a>.</p>
+  </div>
+
+      </td>
+    </tr>
+  </tbody>
+</table>
+
 <table style="font-family:arial,helvetica,sans-serif;" role="presentation" cellpadding="0" cellspacing="0" width="100%" border="0">
   <tbody>
     <tr>
@@ -754,7 +804,7 @@ table, td { color: #000000; } #u_body a { color: #ffa31a; text-decoration: under
         
   <div class="v-color v-text-align v-font-size" style="font-size: 14px; color: #333333; line-height: 140%; text-align: center; word-wrap: break-word;">
     <p style="font-size: 14px; line-height: 140%;"><span style="font-size: 12px; line-height: 16.8px; font-family: arial, helvetica, sans-serif;">If you ever have questions or just want to chat, feel free to drop me a message. All rights reserved.</span></p>
-<p style="font-size: 14px; line-height: 140%;"><span style="font-size: 12px; line-height: 16.8px; font-family: arial, helvetica, sans-serif;"><a rel="noopener" href="https://cloudnature.net/newsletters/unsubscribe" target="_blank"><span style="text-decoration: underline; font-size: 12px; line-height: 16.8px;">Unsubscribe</span></a>.</span><br /><span style="font-size: 12px; line-height: 16.8px; font-family: arial, helvetica, sans-serif;">Matteo Depascale</span></p>
+<p style="font-size: 14px; line-height: 140%;"><span style="font-size: 12px; line-height: 16.8px; font-family: arial, helvetica, sans-serif;"><a rel="noopener" href="https://cloudnature.net/newsletters/unsubscribe" target="_blank"><span style="text-decoration: underline; font-size: 12px; line-height: 16.8px;">Unsubscribe</span></a>.</span><br /><span style="font-size: 12px; line-height: 16.8px; font-family: arial, helvetica, sans-serif;">© 2024 Matteo Depascale</span></p>
   </div>
 
       </td>

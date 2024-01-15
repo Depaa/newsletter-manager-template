@@ -40,6 +40,13 @@ interface MailEvent {
   tags: Record<string, string[]>
 }
 
+interface ClickEvent {
+  ipAddress: string
+  link: string
+  timestamp: string
+  userAgent: string
+}
+
 interface Header {
   name: string
   value: string
@@ -53,8 +60,9 @@ interface CommonHeaders {
 }
 
 export interface SNSMessage {
-  eventType: 'Bounce' | 'DeliveryDelay'
+  eventType: 'Bounce' | 'DeliveryDelay' | 'Click'
   bounce?: BounceEvent
   mail?: MailEvent
   deliveryDelay?: DeliveryDelayEvent
+  click?: ClickEvent
 }

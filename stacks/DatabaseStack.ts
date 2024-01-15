@@ -38,8 +38,22 @@ export const DatabaseStack = async ({ stack, app }: StackContext): Promise<Recor
     }
   })
 
+  const newslettersClicksTable = new Table(stack, 'NewslettersClickTable', {
+    fields: {
+      link: 'string',
+      timestamp: 'string'
+    },
+    primaryIndex: { partitionKey: 'link', sortKey: 'timestamp' },
+    cdk: {
+      table: {
+        removalPolicy: app.stage === 'prod' ? RemovalPolicy.RETAIN : RemovalPolicy.DESTROY
+      }
+    }
+  })
+
   return {
     newslettersTable,
-    newsletterSubscribersTable
+    newsletterSubscribersTable,
+    newslettersClicksTable
   }
 }

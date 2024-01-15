@@ -12,10 +12,12 @@ const main: Handler<FromSchema<typeof bodySchema>, FromSchema<typeof pathParamet
     updatedAt: Date.now(),
     updatedBy: event.requestContext?.authorizer?.claims.sub
   }
+  console.debug(updateParams)
 
   await NewslettersTableDefinition.update(updateParams, {
     returnValues: 'ALL_NEW'
   })
+  console.info('Successfully update newsletter')
 
   return {
     statusCode: 204,

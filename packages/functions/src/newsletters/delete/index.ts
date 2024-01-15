@@ -7,6 +7,7 @@ const main: Handler<void, FromSchema<typeof pathParametersSchema>, void> = async
   await NewslettersTableDefinition.delete({
     id: event.pathParameters.id
   })
+  console.info('Successfully deleted newsletter')
 
   return {
     statusCode: 204,

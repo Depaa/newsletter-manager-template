@@ -22,10 +22,12 @@ const main: HandlerSNS = async (event: SNSEvent) => {
           deletedAt: Date.now(),
           status: SubscriptionStatus.DISABLED
         }
+        console.debug(params)
 
         await SubscriptionsTableDefinition.update(params, {
           returnValues: 'ALL_NEW'
         })
+        console.info('Successfully unsubscribed')
       }
     }
   }

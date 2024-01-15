@@ -17,7 +17,9 @@ const main: Handler<FromSchema<typeof bodySchema>, void, void> = async (event) =
     updatedAt: Date.now(),
     updatedBy: event.requestContext?.authorizer?.claims.sub
   }
+  console.debug(newsletter)
   await NewslettersTableDefinition.put(newsletter)
+  console.info('Successfully created newsletter')
 
   return {
     statusCode: 201,

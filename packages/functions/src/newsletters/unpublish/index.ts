@@ -27,12 +27,14 @@ const main: Handler<void, FromSchema<typeof pathParametersSchema>, void> = async
     updatedAt: Date.now(),
     updatedBy: event.requestContext?.authorizer?.claims.sub
   }
+  console.debug(updateParams)
 
   await NewslettersTableDefinition.update(updateParams, {
     returnValues: 'ALL_NEW'
   }, {
     REMOVE: ['publishAt', 'sfExecutionArn']
   })
+  console.info('Successfully unpublished newsletter')
 
   const stopExecutionParams: StopExecutionCommandInput = {
     executionArn: newsletter.sfExecutionArn,
@@ -40,6 +42,7 @@ const main: Handler<void, FromSchema<typeof pathParametersSchema>, void> = async
   }
   const startExecutionCommand = new StopExecutionCommand(stopExecutionParams)
   await stepfunctionsClient.send(startExecutionCommand)
+  console.info('Successfully stopped step function execultion')
 
   return {
     statusCode: 204,

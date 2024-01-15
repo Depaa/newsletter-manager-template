@@ -33,9 +33,6 @@ const createSendEmailCommand = (toAddress: string): SendEmailCommand => {
     },
     FromEmailAddress: process.env.SOURCE_EMAIL_ADDRESS,
     FromEmailAddressIdentityArn: process.env.IDENTITY_ARN,
-    ReplyToAddresses: [
-      process.env.REPLY_TO_ADDRESS ?? ''
-    ],
     ConfigurationSetName: process.env.CONFIGURATION_SET_NAME
   })
 }

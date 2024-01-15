@@ -9,7 +9,8 @@ import template from '../packages/core/src/libs/templates/newsletter'
 export const EmailStack = ({ stack, app }: StackContext): Record<string, string> => {
   const {
     newslettersTable,
-    newsletterSubscribersTable
+    newsletterSubscribersTable,
+    newslettersClicksTable
   } = use(DatabaseStack)
 
   /**
@@ -26,7 +27,9 @@ export const EmailStack = ({ stack, app }: StackContext): Record<string, string>
     ],
     resources: [
       newsletterSubscribersTable.tableArn,
-        `${newsletterSubscribersTable.tableArn}/*`
+      `${newsletterSubscribersTable.tableArn}/*`,
+      newslettersClicksTable.tableArn,
+      `${newslettersClicksTable.tableArn}/*`
     ]
   })
   const emailRole = new Role(stack, 'EmailRole', {
@@ -110,6 +113,27 @@ export const EmailStack = ({ stack, app }: StackContext): Record<string, string>
     }
   })
 
+  const clicksTopic = new Topic(stack, 'ClicksPerLink', {
+    defaults: {
+      function: {
+        role: emailRole,
+        environment: {
+          NEWSLETTER_CLICKS_TABLE_NAME: newslettersClicksTable.tableName
+        },
+        timeout: 29,
+        bind: [newslettersTable, newsletterSubscribersTable]
+      }
+    }
+  })
+  clicksTopic.addSubscribers(stack, {
+    lambda: {
+      function: {
+        handler: 'packages/functions/src/emails/clicks/index.handler',
+        functionName: `${stack.stackName}-emails-clicks`
+      }
+    }
+  })
+
   /**
    * Create Configuration Set and Events
    */
@@ -128,6 +152,10 @@ export const EmailStack = ({ stack, app }: StackContext): Record<string, string>
   configurationSet.addEventDestination('GenericErrorsSns', {
     destination: EventDestination.snsTopic(genericErrorsTopic.cdk.topic),
     events: [EmailSendingEvent.REJECT, EmailSendingEvent.RENDERING_FAILURE, EmailSendingEvent.DELIVERY_DELAY]
+  })
+  configurationSet.addEventDestination('ClickSns', {
+    destination: EventDestination.snsTopic(clicksTopic.cdk.topic),
+    events: [EmailSendingEvent.CLICK]
   })
 
   let identityName = ''

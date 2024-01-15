@@ -22,7 +22,7 @@ export const SchedulerStack = ({ stack }: StackContext): Record<string, StateMac
     States: {
       'Parallel state': {
         Type: 'Parallel',
-        Next: 'Publish success recap state',
+        Next: 'Filter error messages',
         Catch: [
           {
             ErrorEquals: [
@@ -87,7 +87,31 @@ export const SchedulerStack = ({ stack }: StackContext): Record<string, StateMac
                   ConfigurationSetName: configurationSetName
                 },
                 Resource: 'arn:aws:states:::aws-sdk:sesv2:sendBulkEmail',
-                End: true
+                Next: 'Filter test error messages'
+              },
+              'Filter test error messages': {
+                Type: 'Pass',
+                Next: 'Are there any test errors?',
+                Parameters: {
+                  'statusesLength.$': 'States.ArrayLength($.BulkEmailEntryResults[*].Error)'
+                }
+              },
+              'Are there any test errors?': {
+                Type: 'Choice',
+                Choices: [
+                  {
+                    Variable: '$.statusesLength',
+                    NumericLessThanEquals: 0,
+                    Next: 'Send test message complete'
+                  }
+                ],
+                Default: 'Send test email failed'
+              },
+              'Send test message complete': {
+                Type: 'Succeed'
+              },
+              'Send test email failed': {
+                Type: 'Fail'
               }
             }
           },
@@ -316,16 +340,25 @@ export const SchedulerStack = ({ stack }: StackContext): Record<string, StateMac
           }
         ]
       },
-      'Publish success recap state': {
-        Next: 'SucceedState',
-        Type: 'Task',
-        Resource: 'arn:aws:states:::sns:publish',
+      'Filter error messages': {
+        Type: 'Pass',
+        Next: 'Choice',
         Parameters: {
-          TopicArn: `${alertingTopic.topicArn}`,
-          'Message.$': '$'
+          'statusesLength.$': 'States.ArrayLength($[1][*].BulkEmailEntryResults[*].Error)'
         }
       },
-      SucceedState: {
+      Choice: {
+        Type: 'Choice',
+        Choices: [
+          {
+            Variable: '$.statusesLength',
+            NumericLessThanEquals: 0,
+            Next: 'SuccessState'
+          }
+        ],
+        Default: 'Publish error state'
+      },
+      SuccessState: {
         Type: 'Succeed'
       },
       'Publish error state': {

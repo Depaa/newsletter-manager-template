@@ -32,6 +32,8 @@ const main: Handler<void, void, FromSchema<typeof queryStringParametersSchema>> 
         limit,
         startKey: (nextToken !== undefined && nextToken !== '') ? JSON.parse(Buffer.from(nextToken, 'base64').toString('utf-8')) : undefined
       })
+      console.info('Successfully listed newsletters')
+      console.debug(newsletters)
       items = newsletters.Items as Newsletter[] ?? []
       if (newsletters.LastEvaluatedKey != null) {
         nextToken = Buffer.from(JSON.stringify(newsletters.LastEvaluatedKey), 'utf-8').toString('base64')
@@ -46,7 +48,7 @@ const main: Handler<void, void, FromSchema<typeof queryStringParametersSchema>> 
       reverse: false,
       attributes: ['status', 'subject', 'publishedAt', 'content']
     })
-    console.info('Successfully listed newsletters')
+    console.info('Successfully listed newsletters with query')
     console.debug(newsletters)
     items = newsletters.Items as Newsletter[] ?? []
     if (newsletters.LastEvaluatedKey != null) {

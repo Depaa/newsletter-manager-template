@@ -18,10 +18,12 @@ const main: Handler<FromSchema<typeof bodySchema>, FromSchema<typeof pathParamet
     updatedAt: Date.now(),
     updatedBy: event.requestContext?.authorizer?.claims.sub
   }
+  console.debug(updateParams)
 
   await NewslettersTableDefinition.update(updateParams, {
     returnValues: 'ALL_NEW'
   })
+  console.info('Successfully published newsletter')
 
   const startExecutionParams: StartExecutionCommandInput = {
     stateMachineArn: process.env.EMAIL_SCHEDULER_SF_ARN,
@@ -33,6 +35,7 @@ const main: Handler<FromSchema<typeof bodySchema>, FromSchema<typeof pathParamet
   }
   const startExecutionCommand = new StartExecutionCommand(startExecutionParams)
   await stepfunctionsClient.send(startExecutionCommand)
+  console.info('Successfully started step function execultion')
 
   return {
     statusCode: 204,
