@@ -33,7 +33,13 @@ export default {
           minify: app.stage === 'prod',
           keepNames: true,
           target: 'node20',
-          platform: 'node'
+          platform: 'node',
+          external: [
+            '@aws-sdk/lib-dynamodb',
+            '@aws-sdk/client-sfn',
+            '@aws-sdk/client-dynamodb',
+            '@aws-sdk/client-sesv2'
+          ]
         },
         minify: app.stage === 'prod'
       }
