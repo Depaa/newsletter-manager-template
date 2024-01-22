@@ -13,7 +13,6 @@ export const ApiStack = ({ stack, app }: StackContext): void => {
   const { emailStateMachine } = use(SchedulerStack)
   const { configurationSetName, identityName } = use(EmailStack)
 
-  // https://docs.sst.dev/constructs/Cognito
   const auth = new Cognito(stack, 'Auth', {
     login: ['email'],
     cdk: {
@@ -74,7 +73,6 @@ export const ApiStack = ({ stack, app }: StackContext): void => {
           environment: {
             DOMAIN_NAME: process.env.DOMAIN_NAME ?? '',
             SOURCE_EMAIL_ADDRESS: process.env.SOURCE_EMAIL_ADDRESS ?? '',
-            REPLY_TO_ADDRESS: process.env.REPLY_TO_ADDRESS ?? '',
             CONFIGURATION_SET_NAME: configurationSetName,
             IDENTITY_ARN: `arn:aws:ses:${stack.region}:${stack.account}:identity/${identityName}`
           }

@@ -81,9 +81,6 @@ export const SchedulerStack = ({ stack }: StackContext): Record<string, StateMac
                   },
                   FromEmailAddress: process.env.SOURCE_EMAIL_ADDRESS,
                   FromEmailAddressIdentityArn: `arn:aws:ses:${stack.region}:${stack.account}:identity/${identityName}`,
-                  ReplyToAddresses: [
-                    process.env.REPLY_TO_ADDRESS
-                  ],
                   ConfigurationSetName: configurationSetName
                 },
                 Resource: 'arn:aws:states:::aws-sdk:sesv2:sendBulkEmail',
@@ -317,9 +314,6 @@ export const SchedulerStack = ({ stack }: StackContext): Record<string, StateMac
                         },
                         FromEmailAddress: process.env.SOURCE_EMAIL_ADDRESS,
                         FromEmailAddressIdentityArn: `arn:aws:ses:${stack.region}:${stack.account}:identity/${identityName}`,
-                        ReplyToAddresses: [
-                          process.env.REPLY_TO_ADDRESS
-                        ],
                         ConfigurationSetName: configurationSetName
                       },
                       Resource: 'arn:aws:states:::aws-sdk:sesv2:sendBulkEmail',
