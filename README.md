@@ -4,6 +4,9 @@
 
 Newsletter Backend Orchestration Template in AWS with SST
 
+## Link to the article:
+### 🔗 [https://cloudnature.net/blog/building-a-serverless-newsletter-your-guide-to-aws-and-amazon-ses](https://cloudnature.net/blog/building-a-serverless-newsletter-your-guide-to-aws-and-amazon-ses?utm_medium=social&utm_source=github.com&utm_campaign=Depaa)
+
 ---
 
 ## How to run
